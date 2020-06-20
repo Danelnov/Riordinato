@@ -1,0 +1,8 @@
+README.md
+setup.py
+riordinato/__init__.py
+riordinato/my_files.py
+riordinato.egg-info/PKG-INFO
+riordinato.egg-info/SOURCES.txt
+riordinato.egg-info/dependency_links.txt
+riordinato.egg-info/top_level.txt
