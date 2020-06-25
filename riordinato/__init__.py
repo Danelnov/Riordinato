@@ -1,6 +1,6 @@
-from riordinato import my_files
+from riordinato import Riordinato
 
 
 __version__ = '0.1.0'
 
-__all__ = ['my_files']
+__all__ = ['Riordinato']

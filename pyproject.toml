@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "riordinato"
 version = "0.1.0"
-description = ""
+description = "organize your files with prefixes"
 authors = ["Dan- <misternutel@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 keywords = ["organize", "riordinato", "prefixes", "dir"]
+homepage = "https://github.com/DAN-pix/Riordinato"
+repository = "https://github.com/DAN-pix/Riordinato"
 
 [tool.poetry.dependencies]
 python = "^3.7"
