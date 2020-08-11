@@ -26,9 +26,8 @@ class Organize():
     
     def get_files_wp(self, prefix, files):
         """get the files that have the prefix through a regular expression"""
-        # !This  function is bad
-        regex = r"^{}(...|\w+)\B.+".format(prefix)
-        files = [afile for afile in files if re.finditer(regex, afile, re.IGNORECASE)]
+        regex = rf"^{prefix}(...|\w+)\B.+"
+        files = [afile for afile in files if re.findall(regex, afile, re.IGNORECASE)]
         return files
 
     def organize_specific_files(self, prefix):

@@ -7,8 +7,10 @@ import re
 class TestFiles(unittest.TestCase):
 
     dir = "/home/daniel/Escritorio/test"
-    with os.scandir(dir) as files:
-        files = [afile.name for afile in files if afile.is_file()]
+    files = ['matenose.txt', 'sldkafj.txt', 'script.py', 'ciencias_asco.txt', 
+             'matehola.txt', 'mateotra.txt', 'cienciasmas.txt', 'wofew.txt',
+             'ciencias.txt', 'ciencias_ciencias.txt', 'ciencias_mierdad.txt', 'dfow.txt', 
+             'matenose2.txt', 'regular.py']
 
     def test_get_files(self):
 
@@ -17,7 +19,8 @@ class TestFiles(unittest.TestCase):
 
     def test_get_fileswp(self):
         order = Organize("", self.dir).get_files_wp("mate", self.files)
-        result = ['matehola.txt', 'matenose2.txt', 'matenose.txt', 'mateotra.txt']
+        result = ['matenose.txt', 'matehola.txt',
+                  'mateotra.txt', 'matenose2.txt']
         self.assertEqual(order, result)
 
 
