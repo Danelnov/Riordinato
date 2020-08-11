@@ -5,7 +5,7 @@ import os
 
 class TestFiles(unittest.TestCase):
     
-    def get_files(self):
+    def test_get_files(self):
         dir = "/home/daniel/Escritorio/test"
         with os.scandir(dir) as files:
             files = [afile.name for afile in files if afile.is_file()]
