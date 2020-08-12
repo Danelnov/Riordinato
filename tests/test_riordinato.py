@@ -9,7 +9,7 @@ class TestFiles(unittest.TestCase):
     dir = "/home/daniel/Escritorio/test"
     files = ['matenose.txt', 'sldkafj.txt', 'script.py', 'ciencias_asco.txt', 
              'matehola.txt', 'mateotra.txt', 'cienciasmas.txt', 'wofew.txt',
-             'ciencias.txt', 'ciencias_ciencias.txt', 'ciencias_mierdad.txt', 'dfow.txt', 
+             'ciencias.txt', 'ciencias_ciencias.txt', 'ciencias_dad.txt', 'dfow.txt', 
              'matenose2.txt', 'regular.py']
 
     def test_get_files(self):

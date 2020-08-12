@@ -36,11 +36,9 @@ class Organize():
 
         files = self.get_files_wp(prefix, self.files)
 
-        for prefix in self.prefixes:
-            if prefix == prefix[0]:
-                for afile in files:
-                    move(afile, prefix[1])
-                break
+        for afile in files:
+            move(afile, prefix[1])
+                
 
     def organize_all(self):
         os.chdir(self.dirLocation)
