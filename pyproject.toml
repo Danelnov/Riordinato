@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "riordinato"
-version = "0.3.0"
+version = "0.3.3"
 description = "organize your files with prefixes"
 authors = ["Dan- <misternutel@gmail.com>"]
 readme = "README.md"
