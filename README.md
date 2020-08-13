@@ -1,4 +1,4 @@
-# Foobar
+# Riordinato
 
 Riordinato is a python library for organizing files with prefixes.
 
@@ -36,7 +36,7 @@ organize.organize_specific_files('<prefix>')
 ```
 
 ## Contributing
-any pull request is welcome.
+Any pull request is welcome.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
