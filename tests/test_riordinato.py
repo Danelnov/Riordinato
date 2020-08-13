@@ -7,20 +7,19 @@ import re
 class TestFiles(unittest.TestCase):
 
     dir = "/home/daniel/Escritorio/test"
-    files = ['matenose.txt', 'sldkafj.txt', 'script.py', 'ciencias_asco.txt', 
-             'matehola.txt', 'mateotra.txt', 'cienciasmas.txt', 'wofew.txt',
-             'ciencias.txt', 'ciencias_ciencias.txt', 'ciencias_dad.txt', 'dfow.txt', 
-             'matenose2.txt', 'regular.py']
+    files = ['sldkafj.txt', 'script.py', 'ciencias_asco.txt', 'cienciasmas.txt',
+             'matejajas.txt', 'mate.txt', 'wofew.txt', 'a', 'slkdCiencias.py',
+             'Matesdfl.py', 'ciencias.txt', 'ciencias_ciencias.txt',
+             'ciencias_mierdad.txt', 'noseMate.txt', 'dfow.txt', 'regular.py']
 
     def test_get_files(self):
 
-        order = Organize("", self.dir).get_files()
-        self.assertEqual(order, self.files)
+        order = Organize("", self.dir)
+        self.assertEqual(order.files, self.files)
 
     def test_get_fileswp(self):
         order = Organize("", self.dir).get_files_wp("mate", self.files)
-        result = ['matenose.txt', 'matehola.txt',
-                  'mateotra.txt', 'matenose2.txt']
+        result = ['matejajas.txt', 'mate.txt', 'Matesdfl.py']
         self.assertEqual(order, result)
 
 
