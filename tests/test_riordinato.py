@@ -1,27 +1,33 @@
 from riordinato.files import Organize
-import unittest
-import os
-import re
+import pytest
 
 
-class TestFiles(unittest.TestCase):
+@pytest.fixture
+def files():
+    newFiles = ["pythonTutorial.py", "mathExercise.txt", "pythonCourse.txt",
+                "pythonPro.docx", "Python_is_cool.py", "mathProblems.txt",
+                "ScinceU.docx", "ThisIsSpam.xd", "mathForPython.pdf",
+                "MoreSpam.toml", "scinceForComputing.epup", "asdkfñlk.idk"]
 
-    dir = "/home/daniel/Escritorio/test"
-    files = ['sldkafj.txt', 'script.py', 'ciencias_asco.txt', 'cienciasmas.txt',
-             'matejajas.txt', 'mate.txt', 'wofew.txt', 'a', 'slkdCiencias.py',
-             'Matesdfl.py', 'ciencias.txt', 'ciencias_ciencias.txt',
-             'ciencias_mierdad.txt', 'noseMate.txt', 'dfow.txt', 'regular.py']
-
-    def test_get_files(self):
-
-        order = Organize("", self.dir)
-        self.assertEqual(order.files, self.files)
-
-    def test_get_fileswp(self):
-        order = Organize("", self.dir).get_files_wp("mate", self.files)
-        result = ['matejajas.txt', 'mate.txt', 'Matesdfl.py']
-        self.assertEqual(order, result)
+    instance = Organize("", ".")
+    instance.files = newFiles
+    return instance
 
 
-if __name__ == "__main__":
-    unittest.main()
+@pytest.mark.parametrize(
+    "prefix, expected",
+    [
+        ("python",
+         ['pythonTutorial.py', 'pythonCourse.txt',
+          'pythonPro.docx', 'Python_is_cool.py']),
+
+        ("math",
+         ['mathExercise.txt', 'mathProblems.txt',
+          'mathForPython.pdf']),
+
+        ("scince",
+         ['ScinceU.docx', 'scinceForComputing.epup'])
+    ]
+)
+def test_getFilesWP(files, prefix, expected):
+    assert files.getFilesWP(prefix) == expected
