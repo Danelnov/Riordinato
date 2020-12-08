@@ -47,7 +47,7 @@ class Organize():
                     move(afile, prefix[1])
 
     def getFiles(self) -> list:
-        """Get Files With Prefixes
+        """Get the files that are in the path attribute.
 
         Get all the files that are on the path, excluding the folders 
         and returning only the files.
@@ -60,7 +60,9 @@ class Organize():
         return files
 
     def getFilesWP(self, prefix: str) -> list:
-        """get the files that have the prefix through a regular expression
+        """Get files with prefixes
+        
+        get the files that have the prefix through a regular expression
 
         Use the filter function to be able to find within 
         the list the files that contain the assigned prefix.
