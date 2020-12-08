@@ -27,7 +27,7 @@ dir = '/home/user/any folder'
 organize = Organize(prefixes, dir)
 
 # Organize all files in the folder
-organize.organize_all()
+organize.moveFiles()
 
 # organizes only files containing the specified prefix
 organize.organize_specific_files('<prefix>')
