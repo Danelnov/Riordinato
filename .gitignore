@@ -3,3 +3,4 @@ __pycache__/
 cliApp.py
 dist/
 riordinato.egg-info/
+.pytest_cache/v/cache
