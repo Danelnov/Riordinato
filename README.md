@@ -63,8 +63,8 @@ If you want to see the files that are in the path you can print the files attrib
 ```py
 >>> print(organize.files)
 
-['pythonWork.py', 'python_examples.txt', 'family.jpg',
-'dog.png', 'index.html', 'work_list.txt', 'any_work.docx', 'work_for_later.docx', 'python_exercise.pdf']
+['pythonWork.py', 'python_examples.txt', 'family.jpg', 'dog.png', 'index.html', 
+'work_list.txt', 'any_work.docx', 'work_for_later.docx', 'python_exercise.pdf']
 ```
 
 To organize our files we use the moveFiles method
