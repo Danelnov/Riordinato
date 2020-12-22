@@ -93,12 +93,11 @@ class Organize():
         else:
             prefixes = self.prefixes
         
-        # remove the ignored prefix
-        if ignore in prefixes:
-            prefixes.remove(ignore) 
-        
         # Move each file
         for prefix in prefixes:
+            if prefix[0] == ignore:
+                continue
+            else:
                 destination = prefix[1]
                 self.moveSpecificFiles(prefix[0], destination)
                 

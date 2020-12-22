@@ -41,7 +41,7 @@ test_data = pytest.mark.parametrize(
           'mathExercise.txt', ]),
 
         ("scince",
-         ['scinceForComputing.epup', 'ScinceU.docx', ]),
+         ['scinceForComputing.epup', 'ScinceU.docx']),
     ]
 )
 
@@ -98,16 +98,30 @@ def test_all_moveFiles(tmp_path, instance, prefix, expected):
 
     assert files == expected
 
+
 @test_data
 def test_specific_moveFiles(tmp_path, instance, prefix, expected):
     instance.moveFiles(specific=prefix)
     files = get_tmp_files(tmp_path / prefix)
-    
+
     assert files == expected
+
+
+@pytest.mark.parametrize("ignore", [
+    "python",
+    "math",
+    "scince",
+])
+def test_ingore_moveFiles(instance ,tmp_path, ignore):
+    instance.moveFiles(ignore=ignore)
+    files = get_tmp_files(tmp_path / ignore)
+
+    assert files == []
+
 
 @test_data
 def test_moveSpecificFiles(tmp_path, instance, prefix, expected):
     instance.moveSpecificFiles(prefix, tmp_path / prefix)
     files = get_tmp_files(tmp_path / prefix)
-    
+
     assert files == expected
