@@ -10,11 +10,11 @@ class Organize():
 
     Attributes
     ----------
-    prefixes: list
+    prefixes : list
         list containing prefixes name and destination place.
-    path: str
+    path : str
         The folder location where the files to be moved are located.
-    files: list
+    files : list
         The files found in the path.
 
     Methods
@@ -40,11 +40,11 @@ class Organize():
         """
         Parameters
         ----------
-        prefixes: list
+        prefixes : list
             list containing prefixes name and destination place.
-        path: str
+        path : str
             The folder location where the files to be moved are located.
-        files: list
+        files : list
             The files found in the path.
         """
         self.prefixes = prefixes
@@ -56,9 +56,9 @@ class Organize():
 
         Parameters
         ----------
-        prefix: str
+        prefix : str
             The prefix that the files must contain.
-        destination: str
+        destination : str
             The directory where files containing the prefix will be moved.
         """
 
@@ -75,26 +75,33 @@ class Organize():
                     move(file, destination)
                 break
 
-    def moveFiles(self, specific: str = None):
+    def moveFiles(self, specific: str = None, ignore: str = None):
         """Move all files that are in the path
 
         Parameters
         ----------
-        specific: str, optional
+        specific : str, optional
             Move only files containing this prefix (default is None)
-        """
+        ignore : str, optional
+            prefixes that are ignored
 
+        """
+        
+        if specific:
+            prefixes = list(filter(lambda x: x[0] == specific, 
+                                   self.prefixes))
+        else:
+            prefixes = self.prefixes
+        
+        # remove the ignored prefix
+        if ignore in prefixes:
+            prefixes.remove(ignore) 
+        
         # Move each file
-        for prefix in self.prefixes:
-            if specific == None:
+        for prefix in prefixes:
                 destination = prefix[1]
                 self.moveSpecificFiles(prefix[0], destination)
-            else:
-                if prefix[0] == specific:  # Check if specific are in self.prefixes
-                    destination = prefix[1]
-                    self.moveSpecificFiles(prefix[0], destination)
-                    break
-
+                
     def getFiles(self) -> list:
         """Get the files that are in the path attribute.
 
@@ -118,7 +125,7 @@ class Organize():
 
         Parameters
         ----------
-        prefix: str
+        prefix : str
             Prefix that will be used to filter the files that contain it.
 
         Return
