@@ -3,8 +3,6 @@ from pathlib import Path
 import re
 import os
 
-# TODO: use pathlib
-
 class Organize():
     """
     Create prefixes and use them to sort files in different folders.
@@ -87,6 +85,7 @@ class Organize():
             prefixes that are ignored
 
         """
+        # TODO: make parameters compatible with lists
         
         if specific:
             prefixes = list(filter(lambda x: x[0] == specific, 
