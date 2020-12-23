@@ -1,6 +1,7 @@
 from shutil import move
-import os
+from pathlib import Path 
 import re
+import os
 
 # TODO: use pathlib
 
@@ -48,7 +49,7 @@ class Organize():
             The files found in the path.
         """
         self.prefixes = prefixes
-        self.path = path
+        self.path = Path(path)
         self.files = self.getFiles()    # get files from path
 
     def moveSpecificFiles(self, prefix: str, destination: str):
@@ -109,11 +110,10 @@ class Organize():
         list        
             All the files that are on the path, excluding the folders.
         """
-        path = self.path
-
+        files = self.path.iterdir()
+        
         # Get the files
-        with os.scandir(path) as files:
-            files = [afile.name for afile in files if afile.is_file()]
+        files = [file.name for file in files if file.is_file()]
 
         return files
 
@@ -141,5 +141,5 @@ class Organize():
 
         return files
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.prefixes
