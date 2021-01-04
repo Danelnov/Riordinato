@@ -29,6 +29,7 @@ def get_tmp_files(tmp_path):
     return tmp_files
 
 
+# test data for parametrize
 test_data = pytest.mark.parametrize(
     "prefix, expected",
     [
@@ -112,7 +113,7 @@ def test_specific_moveFiles(tmp_path, instance, prefix, expected):
     "math",
     "scince",
 ])
-def test_ingore_moveFiles(instance ,tmp_path, ignore):
+def test_ingore_moveFiles(instance, tmp_path, ignore):
     instance.moveFiles(ignore=ignore)
     files = get_tmp_files(tmp_path / ignore)
 
