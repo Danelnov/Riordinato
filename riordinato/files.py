@@ -1,7 +1,22 @@
 from shutil import move
-from pathlib import Path 
+from pathlib import Path
 import re
 import os
+
+
+class Prefix:
+    def __init__(self, prefix: str, destination: str):
+        """
+        Parameters
+        ----------
+        prefix : str
+            Name of prefix.
+        destination : str
+            Prefix destination, must be a path.
+        """
+        self.prefix = prefix
+        self.path = Path(destination)
+
 
 class Organize():
     """
@@ -86,13 +101,13 @@ class Organize():
 
         """
         # TODO: make parameters compatible with lists
-        
+
         if specific:
-            prefixes = list(filter(lambda x: x[0] == specific, 
+            prefixes = list(filter(lambda x: x[0] == specific,
                                    self.prefixes))
         else:
             prefixes = self.prefixes
-        
+
         # Move each file
         for prefix in prefixes:
             if prefix[0] == ignore:
@@ -100,7 +115,7 @@ class Organize():
             else:
                 destination = prefix[1]
                 self.moveSpecificFiles(prefix[0], destination)
-                
+
     def getFiles(self) -> list:
         """Get the files that are in the path attribute.
 
@@ -110,7 +125,7 @@ class Organize():
             All the files that are on the path, excluding the folders.
         """
         files = self.path.iterdir()
-        
+
         # Get the files
         files = [file.name for file in files if file.is_file()]
 
