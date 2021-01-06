@@ -100,7 +100,10 @@ def test_all_moveFiles(tmp_path, instance, prefix, expected):
     assert files == expected
 
 
+<<<<<<< HEAD
 # TODO: make this test general purpose for the moveFiles method
+=======
+>>>>>>> c069180c11bed8fae5991e9f414ad578af7bb6b6
 @pytest.mark.parametrize("specific_prefix, expected_files", [
     (["python", "math"],
      ['scinceForComputing.epup', 'ScinceU.docx', 'asdkfñlk.idk',
