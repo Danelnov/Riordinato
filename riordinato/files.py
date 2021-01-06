@@ -18,7 +18,7 @@ class Prefix:
         self.path = Path(destination)
 
 
-class Organize():
+class Riordinato:
     """
     Create prefixes and use them to sort files in different folders.
 
@@ -47,7 +47,7 @@ class Organize():
     >>> prefixes = [('python', '/home/user/documents/python'),
     ...             ('math', '/home/user/documents/math')]
     >>> path = "/home/user/desktop/python"
-    >>> a = Organize(prefixes, path)
+    >>> a = Riordinato(prefixes, path)
 
     """
 
@@ -90,7 +90,7 @@ class Organize():
                     move(file, destination)
                 break
 
-    def moveFiles(self, specific: str = None, ignore: str = None):
+    def moveFiles(self, specific=None, ignore=None):
         """Move all files that are in the path
 
         Parameters
@@ -105,19 +105,19 @@ class Organize():
         
         Move all file that have a prefix.
 
-        >>> Organize.moveFiles()
+        >>> Riordinato.moveFiles()
         
         Move only files that have math prefix.
         
-        >>> Organize.moveFiles(specific='math')
+        >>> Riordinato.moveFiles(specific='math')
 
         Move all files except those with the math prefix.
         
-        >>> Organize.moveFiles(ignore='math')
+        >>> Riordinato.moveFiles(ignore='math')
         
         Move only files that have prefixes that are in the list.
         
-        >>> Organize.movefiles(specific=['math', 'python', 'scince'])
+        >>> Riordinato.moveFiles(specific=['math', 'python', 'scince'])
         """
         prefixes = self.prefixes
 

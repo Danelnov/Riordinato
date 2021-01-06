@@ -1,4 +1,4 @@
-from riordinato.files import Organize
+from riordinato import Riordinato
 import pytest
 
 
@@ -61,7 +61,7 @@ def instance(tmp_path):
     prefixes = [('python', tmp_path / 'python'),
                 ('scince', tmp_path / 'scince'),
                 ('math', tmp_path / 'math')]
-    instance = Organize(prefixes, tmp_path)
+    instance = Riordinato(prefixes, tmp_path)
     return instance
 
 
@@ -69,7 +69,7 @@ def instance(tmp_path):
 def empty_instance(tmp_path):
     """An instance of the class without files"""
     create(tmp_path, [], [])
-    empty = Organize([], tmp_path)
+    empty = Riordinato([], tmp_path)
     return empty
 
 
@@ -101,7 +101,7 @@ def test_all_moveFiles(tmp_path, instance, prefix, expected):
 
 
 @test_data
-def test_specific_moveFiles(tmp_path, instance, prefix, expected):
+def test_specific_moveFiles(tmp_path, instance, prefix, expected):  # TODO: rewrite this test
     instance.moveFiles(specific=prefix)
     files = get_tmp_files(tmp_path / prefix)
 
@@ -113,7 +113,7 @@ def test_specific_moveFiles(tmp_path, instance, prefix, expected):
     "math",
     "scince",
 ])
-def test_ingore_moveFiles(instance, tmp_path, ignore):
+def test_ingore_moveFiles(instance, tmp_path, ignore):              # TODO: rewrite this test
     instance.moveFiles(ignore=ignore)
     files = get_tmp_files(tmp_path / ignore)
 
