@@ -44,7 +44,8 @@ class Organize():
 
     Examples
     --------
-    >>> prefixes = [('python', '/home/user/documents/python')]
+    >>> prefixes = [('python', '/home/user/documents/python'),
+    ...             ('math', '/home/user/documents/math')]
     >>> path = "/home/user/desktop/python"
     >>> a = Organize(prefixes, path)
 
@@ -84,7 +85,7 @@ class Organize():
 
         # Move files to destination
         for aprefix in self.prefixes:
-            if aprefix[0] == prefix:  # Check if prefix are in self.prefixes
+            if aprefix[0] == prefix:    # Check if prefix are in self.prefixes
                 for file in files:
                     move(file, destination)
                 break
@@ -96,28 +97,44 @@ class Organize():
         ----------
         specific : str, list, optional
             Move only files containing this prefix (default is None)
-        ignore : str, optional
+        ignore : str, list, optional
             Prefixes that are ignored (default is None)
 
+        Examples
+        --------
+        
+        Move all file that have a prefix.
+
+        >>> Organize.moveFiles()
+        
+        Move only files that have math prefix.
+        
+        >>> Organize.moveFiles(specific='math')
+
+        Move all files except those with the math prefix.
+        
+        >>> Organize.moveFiles(ignore='math')
+        
+        Move only files that have prefixes that are in the list.
+        
+        >>> Organize.movefiles(specific=['math', 'python', 'scince'])
         """
-        # TODO: make the ignore parameter compatible with lists
+        prefixes = self.prefixes
 
         if specific:
             # Convert str to list
             specific = [specific] if type(specific) == str else specific
-            prefixes = []
-            
-            # Create a list with only the prefixes that are specific         
-            for i in specific:
-                prefixes.append([x for x in self.prefixes if x[0] == i][0])
-        else:
-            prefixes = self.prefixes
-
+            # Create a list with only the prefixes that are specific
+            prefixes = filter(lambda prefix: prefix[0] in specific, prefixes)
+        
+        if ignore:
+            # Convert str to list
+            ignore = [ignore] if type(ignore) == str else ignore
+            # Create a list of prefixes avoiding the ignored ones
+            prefixes = filter(lambda prefix: prefix[0] not in ignore, prefixes)
+        
         # Move each file
         for prefix in prefixes:
-            if prefix[0] == ignore:
-                continue
-            else:
                 destination = prefix[1]
                 self.moveSpecificFiles(prefix[0], destination)
 
@@ -155,8 +172,7 @@ class Organize():
         regex = rf"^{prefix}(...|\w+)\B.+"  # regular expression
 
         # filter files that have the prefix
-        files = list(filter(lambda afile: re.findall(
-            regex, afile, re.IGNORECASE), self.files))
+        files = list(filter(lambda afile: re.findall(regex, afile, re.IGNORECASE), self.files))
 
         return files
 
