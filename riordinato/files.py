@@ -5,16 +5,16 @@ import os
 
 
 class Prefix:
-    def __init__(self, prefix: str, destination: str):
+    def __init__(self, name: str, destination: str):
         """
         Parameters
         ----------
-        prefix : str
+        name : str
             Name of prefix.
         destination : str
             Prefix destination, must be a path.
         """
-        self.prefix = prefix
+        self.prefix = name
         self.path = Path(destination)
 
 
@@ -25,7 +25,7 @@ class Organize():
     Attributes
     ----------
     prefixes : list
-        list containing prefixes name and destination place.
+        list containing prefixes name and destination place `prefixes`.
     path : str
         The folder location where the files to be moved are located.
     files : list
@@ -94,17 +94,22 @@ class Organize():
 
         Parameters
         ----------
-        specific : str, optional
+        specific : str, list, optional
             Move only files containing this prefix (default is None)
         ignore : str, optional
-            prefixes that are ignored
+            Prefixes that are ignored (default is None)
 
         """
-        # TODO: make parameters compatible with lists
+        # TODO: make the ignore parameter compatible with lists
 
         if specific:
-            prefixes = list(filter(lambda x: x[0] == specific,
-                                   self.prefixes))
+            # Convert str to list
+            specific = [specific] if type(specific) == str else specific
+            prefixes = []
+            
+            # Create a list with only the prefixes that are specific         
+            for i in specific:
+                prefixes.append([x for x in self.prefixes if x[0] == i][0])
         else:
             prefixes = self.prefixes
 

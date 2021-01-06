@@ -33,7 +33,7 @@ Riordinato is used to organize files by prefixes. For example, we want to move t
 First import riordinato
 
 ```py
-from riordinato.files import Organize
+from riordinato import Organize
 ```
 
 The prefixes are within a list where the first value is the name and the second the destination.
