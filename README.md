@@ -16,18 +16,18 @@ Riordinato is used to organize files by prefixes. For example, we want to move t
 
 ```
 /home/user/documents
-├── pythonWork.py
-├── python_examples.txt
-├── family.jpg
-├── dog.png
-├── index.html
-├── work_list.txt
-├── any_work.docx
-├── python_exercise.pdf
-├── work_for_later.docx
-│
-├── python/
-└── work/
+    ├── pythonWork.py
+    ├── python_examples.txt
+    ├── family.jpg
+    ├── dog.png
+    ├── index.html
+    ├── work_list.txt
+    ├── any_work.docx
+    ├── python_exercise.pdf
+    ├── work_for_later.docx
+    │
+    ├── python/
+    └── work/
 ```
 
 First import riordinato
@@ -77,18 +77,18 @@ And our directory would look like this.
 
 ```
 /home/user/documents
-├── family.jpg
-├── dog.png
-├── index.html
-├── any_work.docx          
-│
-├── python/
-│   ├── python_exercise.pdf
-│   ├── pythonWork.py
-│   └── python_examples.txt
-└── work/
-    ├── work_for_later.docx
-    └── work_list.txt
+    ├── family.jpg
+    ├── dog.png
+    ├── index.html
+    ├── any_work.docx          
+    │
+    ├── python/
+    │   ├── python_exercise.pdf
+    │   ├── pythonWork.py
+    │   └── python_examples.txt
+    └── work/
+        ├── work_for_later.docx
+        └── work_list.txt
 ```
 
 If we want to move files with a specific prefix, use the "specific" parameter of the method.
@@ -99,20 +99,43 @@ organize.moveFiles(specific='python')
 
 ```
 /home/user/documents
-├── family.jpg
-├── dog.png
-├── index.html
-├── work_list.txt
-├── work_for_later.docx
-├── any_work.docx
-│
-├── python/
-│   ├── python_exercise.pdf
-│   ├── pythonWork.py
-│   └── python_examples.txt
-└── work/
-    
+    ├── family.jpg
+    ├── dog.png
+    ├── index.html
+    ├── work_list.txt
+    ├── work_for_later.docx
+    ├── any_work.docx
+    │
+    ├── python/
+    │   ├── python_exercise.pdf
+    │   ├── pythonWork.py
+    │   └── python_examples.txt
+    └── work/
 ```
+
+You can also ignore files that contain a certain prefix. In this case we will ignore the files that contain the python prefix.
+
+```py
+organize.moveFile(ignore='python')
+```
+
+```
+/home/user/documents
+    ├── pythonWork.py
+    ├── python_examples.txt
+    ├── family.jpg
+    ├── dog.png
+    ├── index.html
+    ├── any_work.docx
+    ├── python_exercise.pdf
+    │
+    ├── python/
+    └── work/
+        ├── work_for_later.docx
+        └── work_list.txt
+```
+
+> **_NOTE:_** the specific and ignore parameters are also compatible with lists
 
 ## Contributing
 A contributing.md will be added soon.
