@@ -4,3 +4,4 @@ cliApp.py
 dist/
 riordinato.egg-info/
 .pytest_cache/v/cache
+tests/asimpleFolder/

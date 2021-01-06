@@ -135,7 +135,7 @@ organize.moveFile(ignore='python')
         └── work_list.txt
 ```
 
-> **_NOTE:_** the specific and ignore parameters are also compatible with lists
+> **_NOTE:_** the specific and ignore parameters are also compatible with lists.
 
 ## Contributing
 A contributing.md will be added soon.
