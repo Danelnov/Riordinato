@@ -29,24 +29,6 @@ def get_tmp_files(tmp_path):
     return tmp_files
 
 
-# test data for parametrize
-test_data = pytest.mark.parametrize(
-    "prefix, expected",
-    [
-        ("python",
-         ['Python_is_cool.py', 'pythonTutorial.py',
-          'pythonCourse.txt', 'pythonPro.docx', ]),
-
-        ("math",
-         ['mathForPython.pdf', 'mathProblems.txt',
-          'mathExercise.txt', ]),
-
-        ("scince",
-         ['scinceForComputing.epup', 'ScinceU.docx']),
-    ]
-)
-
-
 @pytest.fixture
 def instance(tmp_path):
     files = ["pythonTutorial.py", "mathExercise.txt", "pythonCourse.txt",
@@ -71,6 +53,24 @@ def empty_instance(tmp_path):
     create(tmp_path, [], [])
     empty = Riordinato([], tmp_path)
     return empty
+
+
+# test data for parametrize
+test_data = pytest.mark.parametrize(
+    "prefix, expected",
+    [
+        ("python",
+         ['Python_is_cool.py', 'pythonTutorial.py',
+          'pythonCourse.txt', 'pythonPro.docx', ]),
+
+        ("math",
+         ['mathForPython.pdf', 'mathProblems.txt',
+          'mathExercise.txt', ]),
+
+        ("scince",
+         ['scinceForComputing.epup', 'ScinceU.docx']),
+    ]
+)
 
 
 @test_data
@@ -100,12 +100,25 @@ def test_all_moveFiles(tmp_path, instance, prefix, expected):
     assert files == expected
 
 
-@test_data
-def test_specific_moveFiles(tmp_path, instance, prefix, expected):  # TODO: rewrite this test
-    instance.moveFiles(specific=prefix)
-    files = get_tmp_files(tmp_path / prefix)
+@pytest.mark.parametrize("specific_prefix, expected_files", [
+    (["python", "math"],
+     ['scinceForComputing.epup', 'ScinceU.docx', 'asdkfñlk.idk',
+      'ThisIsSpam.xd', 'MoreSpam.toml']),
+    ("scince",
+     ['Python_is_cool.py', 'mathForPython.pdf', 'asdkfñlk.idk',
+      'mathProblems.txt', 'ThisIsSpam.xd', 'pythonTutorial.py',
+      'pythonCourse.txt', 'mathExercise.txt', 'MoreSpam.toml',
+      'pythonPro.docx']),
+    (["python", "math", "scince"],
+     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml']),
+    (None,
+     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml'],)
+])
+def test_specific_moveFiles(tmp_path, instance, specific_prefix, expected_files):
+    instance.moveFiles(specific=specific_prefix)
+    # files = get_tmp_files(tmp_path)
 
-    assert files == expected
+    assert instance.files == expected_files
 
 
 @pytest.mark.parametrize("ignore", [
@@ -113,7 +126,8 @@ def test_specific_moveFiles(tmp_path, instance, prefix, expected):  # TODO: rewr
     "math",
     "scince",
 ])
-def test_ingore_moveFiles(instance, tmp_path, ignore):              # TODO: rewrite this test
+# TODO: rewrite this test
+def test_ingore_moveFiles(instance, tmp_path, ignore):
     instance.moveFiles(ignore=ignore)
     files = get_tmp_files(tmp_path / ignore)
 

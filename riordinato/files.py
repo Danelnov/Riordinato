@@ -1,3 +1,4 @@
+from inspect import getfile
 from shutil import move
 from pathlib import Path
 import re
@@ -89,7 +90,9 @@ class Riordinato:
                 for file in files:
                     move(file, destination)
                 break
-
+        
+        self.files = self.getFiles()    # Update file list
+        
     def moveFiles(self, specific=None, ignore=None):
         """Move all files that are in the path
 
