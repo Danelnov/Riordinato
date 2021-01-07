@@ -92,47 +92,45 @@ def test_empty_getFiles(empty_instance):
     assert empty_instance.getFiles() == []
 
 
-@test_data
-def test_all_moveFiles(tmp_path, instance, prefix, expected):
-    instance.moveFiles()
-    files = get_tmp_files(tmp_path / prefix)
-
-    assert files == expected
-
-
 # TODO: make this test general purpose for the moveFiles method
-@pytest.mark.parametrize("specific_prefix, expected_files", [
-    (["python", "math"],
+@pytest.mark.parametrize("specific, ignore, expected_files", [
+    # Test move all files
+    (None, None,
+     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml']),
+    # Test move specific files
+    (["python", "math"], None,
      ['scinceForComputing.epup', 'ScinceU.docx', 'asdkfñlk.idk',
       'ThisIsSpam.xd', 'MoreSpam.toml']),
-    ("scince",
+    ("scince", None,
      ['Python_is_cool.py', 'mathForPython.pdf', 'asdkfñlk.idk',
       'mathProblems.txt', 'ThisIsSpam.xd', 'pythonTutorial.py',
       'pythonCourse.txt', 'mathExercise.txt', 'MoreSpam.toml',
       'pythonPro.docx']),
-    (["python", "math", "scince"],
+    (["python", "math", "scince"], None,
      ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml']),
-    (None,
-     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml'],)
+    # Test ignore
+    (None, ["python", "math"],
+     ['Python_is_cool.py', 'mathForPython.pdf', 'asdkfñlk.idk',
+      'mathProblems.txt', 'ThisIsSpam.xd', 'pythonTutorial.py',
+      'pythonCourse.txt', 'mathExercise.txt', 'MoreSpam.toml',
+      'pythonPro.docx']
+     ),
+    (None, "python",
+     ['Python_is_cool.py', 'asdkfñlk.idk', 'ThisIsSpam.xd', 
+      'pythonTutorial.py', 'pythonCourse.txt', 'MoreSpam.toml', 
+      'pythonPro.docx']),
+    # Test ignore and specific
+    (["python", "math", "scince"], ["python", "math", "scince"],
+     ['scinceForComputing.epup', 'ScinceU.docx', 'Python_is_cool.py', 
+      'mathForPython.pdf', 'asdkfñlk.idk', 'mathProblems.txt', 
+      'ThisIsSpam.xd', 'pythonTutorial.py', 'pythonCourse.txt', 
+      'mathExercise.txt', 'MoreSpam.toml', 'pythonPro.docx']),
 ])
-def test_specific_moveFiles(tmp_path, instance, specific_prefix, expected_files):
-    instance.moveFiles(specific=specific_prefix)
+def test_moveFiles(tmp_path, instance, specific, ignore, expected_files):
+    instance.moveFiles(specific=specific, ignore=ignore)
     # files = get_tmp_files(tmp_path)
 
     assert instance.files == expected_files
-
-
-@pytest.mark.parametrize("ignore", [
-    "python",
-    "math",
-    "scince",
-])
-# TODO: rewrite this test
-def test_ingore_moveFiles(instance, tmp_path, ignore):
-    instance.moveFiles(ignore=ignore)
-    files = get_tmp_files(tmp_path / ignore)
-
-    assert files == []
 
 
 @test_data
