@@ -1,4 +1,3 @@
-from inspect import getfile
 from shutil import move
 from pathlib import Path
 import re
