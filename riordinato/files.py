@@ -1,5 +1,9 @@
 from shutil import move
 from pathlib import Path
+from typing import Tuple
+from typing import Optional
+from typing import Union
+from typing import List
 import re
 import os
 
@@ -22,20 +26,11 @@ class Riordinato:
     """
     Create prefixes and use them to sort files in different folders.
 
-    Attributes
-    ----------
-    prefixes : list
-        list containing prefixes name and destination place `prefixes`.
-    path : str
-        The folder location where the files to be moved are located.
-    files : list
-        The files found in the path.
-
     Methods
     -------
     moveSpecificFiles(prefix, destination)
         Move files with a specific prefix.
-    MoveFiles(specific=None)
+    MoveFiles(specific=None, ignore=None)
         Move all files that are in the path.
     getFiles()
         Get the files that are in the path attribute.
@@ -51,11 +46,11 @@ class Riordinato:
 
     """
 
-    def __init__(self, prefixes: list, path: str):
+    def __init__(self, prefixes: List[Tuple[str, str]], path: str):
         """
         Parameters
         ----------
-        prefixes : list
+        prefixes : List[Tuple[str, str]]
             list containing prefixes name and destination place.
         path : str
             The folder location where the files to be moved are located.
@@ -68,7 +63,7 @@ class Riordinato:
 
     def moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
-
+        
         Parameters
         ----------
         prefix : str
@@ -87,38 +82,38 @@ class Riordinato:
         for aprefix in self.prefixes:
             if aprefix[0] == prefix:    # Check if prefix are in self.prefixes
                 for file in files:
-                    move(file, destination)
+                    move(file, Path(destination).absolute())
                 break
-        
+
         self.files = self.getFiles()    # Update file list
-        
-    def moveFiles(self, specific=None, ignore=None):
+
+    def moveFiles(self, specific: Optional[Union[str, list]] = None, ignore: Optional[Union[str, list]] = None):
         """Move all files that are in the path
 
         Parameters
         ----------
-        specific : str, list, optional
+        specific : [str, list], optional
             Move only files containing this prefix (default is None)
-        ignore : str, list, optional
+        ignore : [str, list], optional
             Prefixes that are ignored (default is None)
 
         Examples
         --------
-        
+
         Move all file that have a prefix.
 
         >>> Riordinato.moveFiles()
-        
+
         Move only files that have math prefix.
-        
+
         >>> Riordinato.moveFiles(specific='math')
 
         Move all files except those with the math prefix.
-        
+
         >>> Riordinato.moveFiles(ignore='math')
-        
+
         Move only files that have prefixes that are in the list.
-        
+
         >>> Riordinato.moveFiles(specific=['math', 'python', 'scince'])
         """
         prefixes = self.prefixes
@@ -128,17 +123,17 @@ class Riordinato:
             specific = [specific] if type(specific) == str else specific
             # Create a list with only the prefixes that are specific
             prefixes = filter(lambda prefix: prefix[0] in specific, prefixes)
-        
+
         if ignore:
             # Convert str to list
             ignore = [ignore] if type(ignore) == str else ignore
             # Create a list of prefixes avoiding the ignored ones
             prefixes = filter(lambda prefix: prefix[0] not in ignore, prefixes)
-        
+
         # Move each file
         for prefix in prefixes:
-                destination = prefix[1]
-                self.moveSpecificFiles(prefix[0], destination)
+            destination = prefix[1]
+            self.moveSpecificFiles(prefix[0], destination)
 
     def getFiles(self) -> list:
         """Get the files that are in the path attribute.
@@ -174,7 +169,8 @@ class Riordinato:
         regex = rf"^{prefix}(...|\w+)\B.+"  # regular expression
 
         # filter files that have the prefix
-        files = list(filter(lambda afile: re.findall(regex, afile, re.IGNORECASE), self.files))
+        files = list(filter(lambda afile: re.findall(
+            regex, afile, re.IGNORECASE), self.files))
 
         return files
 
