@@ -1,11 +1,17 @@
+import re
+import os
 from shutil import move
 from pathlib import Path
 from typing import Tuple
 from typing import Optional
 from typing import Union
 from typing import List
-import re
-import os
+
+from riordinato.exceptions import DirIsFileError
+from riordinato.exceptions import DirNotExistsError
+from riordinato.exceptions import TypePrefixError
+from riordinato.exceptions import EmptyPrefixError
+from riordinato.exceptions import InvalidPrefixError
 
 
 class Prefix:
@@ -16,10 +22,29 @@ class Prefix:
         name : str
             Name of prefix.
         destination : str
-            Prefix destination, must be a path.
+            Prefix destination, must be a absolute path.
         """
         self.prefix = name
-        self.path = Path(destination)
+        self.path = Path(destination).absolute()
+
+    def checkPrefix(self):
+        """check that the attributes are correct"""
+        invalid_prefixes = ["."]
+
+        # check path
+        if not self.path.exists():
+            raise DirNotExistsError(self.path.name)
+        elif self.path.is_file():
+            raise DirIsFileError(self.path.name)
+
+        # check prefix name
+        if not self.prefix:
+            raise EmptyPrefixError(self.prefix)
+        else:
+            if type(self.prefix) != str:
+                raise TypePrefixError(self.prefix)
+            elif self.prefix in invalid_prefixes:
+                raise InvalidPrefixError(self.prefix)
 
 
 class Riordinato:
@@ -58,7 +83,7 @@ class Riordinato:
             The files found in the path.
         """
         self.prefixes = prefixes
-        self.path = Path(path)
+        self.path = Path(path).absolute()
         self.files = self.getFiles()    # get files from path
 
     def moveSpecificFiles(self, prefix: str, destination: str):
@@ -87,7 +112,7 @@ class Riordinato:
 
         self.files = self.getFiles()    # Update file list
 
-    def moveFiles(self, specific: Optional[Union[str, list]] = None, 
+    def moveFiles(self, specific: Optional[Union[str, list]] = None,
                   ignore: Optional[Union[str, list]] = None):
         """Move all files that are in the path
 
@@ -174,6 +199,13 @@ class Riordinato:
             regex, afile, re.IGNORECASE), self.files))
 
         return files
+
+    def checkDir(self):
+        # check self.path
+        if not self.path.exists():
+            raise DirNotExistsError(self.path.name)
+        elif self.path.is_file():
+            raise DirIsFileError(self.path.name)
 
     def __str__(self) -> str:
         return self.prefixes
