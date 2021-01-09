@@ -63,7 +63,7 @@ class Riordinato:
 
     def moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
-        
+
         Parameters
         ----------
         prefix : str
@@ -87,7 +87,8 @@ class Riordinato:
 
         self.files = self.getFiles()    # Update file list
 
-    def moveFiles(self, specific: Optional[Union[str, list]] = None, ignore: Optional[Union[str, list]] = None):
+    def moveFiles(self, specific: Optional[Union[str, list]] = None, 
+                  ignore: Optional[Union[str, list]] = None):
         """Move all files that are in the path
 
         Parameters
