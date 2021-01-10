@@ -24,27 +24,27 @@ class Prefix:
         destination : str
             Prefix destination, must be a absolute path.
         """
-        self.prefix = name
-        self.path = Path(destination).absolute()
+        self.name = name
+        self.destination = Path(destination).absolute()
 
     def checkPrefix(self):
         """check that the attributes are correct"""
         invalid_prefixes = ["."]
 
         # check path
-        if not self.path.exists():
-            raise DirNotExistsError(self.path.name)
-        elif self.path.is_file():
-            raise DirIsFileError(self.path.name)
+        if not self.destination.exists():
+            raise DirNotExistsError(self.destination.name)
+        elif self.destination.is_file():
+            raise DirIsFileError(self.destination.name)
 
         # check prefix name
-        if not self.prefix:
-            raise EmptyPrefixError(self.prefix)
+        if not self.name:
+            raise EmptyPrefixError(self.name)
         else:
-            if type(self.prefix) != str:
-                raise TypePrefixError(self.prefix)
-            elif self.prefix in invalid_prefixes:
-                raise InvalidPrefixError(self.prefix)
+            if type(self.name) != str:
+                raise TypePrefixError(self.name)
+            elif self.name in invalid_prefixes:
+                raise InvalidPrefixError(self.name)
 
 
 class Riordinato:
@@ -71,20 +71,20 @@ class Riordinato:
 
     """
 
-    def __init__(self, prefixes: List[Tuple[str, str]], path: str):
+    def __init__(self, path: str):
         """
         Parameters
         ----------
-        prefixes : List[Tuple[str, str]]
+        prefixes : List[Prefix]
             list containing prefixes name and destination place.
         path : str
             The folder location where the files to be moved are located.
         files : list
             The files found in the path.
         """
-        self.prefixes = prefixes
         self.path = Path(path).absolute()
         self.files = self.getFiles()    # get files from path
+        self.prefixes: List[Prefix] = []
 
     def moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
@@ -104,11 +104,8 @@ class Riordinato:
         files = self.getFilesWP(prefix)
 
         # Move files to destination
-        for aprefix in self.prefixes:
-            if aprefix[0] == prefix:    # Check if prefix are in self.prefixes
-                for file in files:
-                    move(file, Path(destination).absolute())
-                break
+        for file in files:
+            move(file, destination)        
 
         self.files = self.getFiles()    # Update file list
 
@@ -148,18 +145,18 @@ class Riordinato:
             # Convert str to list
             specific = [specific] if type(specific) == str else specific
             # Create a list with only the prefixes that are specific
-            prefixes = filter(lambda prefix: prefix[0] in specific, prefixes)
+            prefixes = filter(lambda prefix: prefix.name in specific, prefixes)
 
         if ignore:
             # Convert str to list
             ignore = [ignore] if type(ignore) == str else ignore
             # Create a list of prefixes avoiding the ignored ones
-            prefixes = filter(lambda prefix: prefix[0] not in ignore, prefixes)
+            prefixes = filter(lambda prefix: prefix.name not in ignore, prefixes)
 
         # Move each file
         for prefix in prefixes:
-            destination = prefix[1]
-            self.moveSpecificFiles(prefix[0], destination)
+            prefix.checkPrefix()    # Check if prefix instance is correct
+            self.moveSpecificFiles(prefix.name, prefix.destination)
 
     def getFiles(self) -> list:
         """Get the files that are in the path attribute.
@@ -200,12 +197,24 @@ class Riordinato:
 
         return files
 
+    def addPrefix(self, name: str, destination: str):
+        """ add new prefixes
+        
+        Parameters
+        ----------
+        name: str
+            Name of prefix.
+        destination: str
+            Path where files containing prefix name will be moved.
+        """
+        prefix = Prefix(name, destination)
+        prefix.checkPrefix()    # Check if prefix instance is correct
+        # Add a Prefix instance to self.prefixes
+        self.prefixes.append(prefix)
+
     def checkDir(self):
         # check self.path
         if not self.path.exists():
             raise DirNotExistsError(self.path.name)
         elif self.path.is_file():
             raise DirIsFileError(self.path.name)
-
-    def __str__(self) -> str:
-        return self.prefixes

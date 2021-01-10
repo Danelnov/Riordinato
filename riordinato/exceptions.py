@@ -86,4 +86,4 @@ class TypePrefixError(InvalidPrefixError):
     
     @property
     def error_message(self):
-        return f"{self.prefix_name} is a {type(self.prefix_name)} it should be a chain"
+        return f"{self.prefix_name} is a {type(self.prefix_name)} it should be a string"
