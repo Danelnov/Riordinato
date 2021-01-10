@@ -43,7 +43,11 @@ def instance(tmp_path):
     prefixes = [('python', tmp_path / 'python'),
                 ('scince', tmp_path / 'scince'),
                 ('math', tmp_path / 'math')]
-    instance = Riordinato(prefixes, tmp_path)
+    instance = Riordinato(tmp_path)
+    
+    for prefix in prefixes:
+        instance.addPrefix(prefix[0], prefix[1])
+    
     return instance
 
 
@@ -51,7 +55,7 @@ def instance(tmp_path):
 def empty_instance(tmp_path):
     """An instance of the class without files"""
     create(tmp_path, [], [])
-    empty = Riordinato([], tmp_path)
+    empty = Riordinato(tmp_path)
     return empty
 
 
@@ -139,3 +143,5 @@ def test_moveSpecificFiles(tmp_path, instance, prefix, expected):
     files = get_tmp_files(tmp_path / prefix)
 
     assert files == expected
+
+# TODO: create tests for exceptions
