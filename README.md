@@ -36,26 +36,16 @@ First import riordinato
 from riordinato import Riordinato
 ```
 
-The prefixes are within a list where the first value is the name and the second the destination.
-
-```py
-            #  NAME            DESTINATION
-prefixes = [('python', '/home/user/documents/python')
-            ('work', '/home/user/documets/work')]
-# You can also use windows directory syntax
-
-```
-
-We define a directory where we have the files we want to move.
+Define a directory where we have the files we want to move.
 
 ```py
 path = '/home/user/documents'
 ```
 
-We create the instance.
+Create the instance.
 
 ```py
-organize = Riordinato(prefixes, path)
+organize = Riordinato(path)
 ```
 
 If you want to see the files that are in the path you can print the files attribute.
@@ -65,6 +55,13 @@ If you want to see the files that are in the path you can print the files attrib
 
 ['pythonWork.py', 'python_examples.txt', 'family.jpg', 'dog.png', 'index.html', 
 'work_list.txt', 'any_work.docx', 'work_for_later.docx', 'python_exercise.pdf']
+```
+
+Now you have to create a prefix with the addPrefix method, the first parameter is the name and the second is the path where the files with the prefix name will move.
+
+```py
+organize.addPrefix('python', './python')
+organize.addPrefix('work', './work')
 ```
 
 To organize our files we use the moveFiles method

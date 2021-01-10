@@ -2,7 +2,6 @@ import re
 import os
 from shutil import move
 from pathlib import Path
-from typing import Tuple
 from typing import Optional
 from typing import Union
 from typing import List
