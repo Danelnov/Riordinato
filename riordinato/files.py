@@ -23,8 +23,8 @@ class Prefix:
         destination : str
             Prefix destination, must be a absolute path.
         """
-        self.name = name
         self.destination = Path(destination).absolute()
+        self.name = name
 
     def checkPrefix(self):
         """check that the attributes are correct"""
@@ -45,6 +45,8 @@ class Prefix:
             elif self.name in invalid_prefixes:
                 raise InvalidPrefixError(self.name)
 
+    def __str__(self) -> str:
+        return "Name: {}\tDestination: {}".format(self.name, self.destination)
 
 class Riordinato:
     """
@@ -81,9 +83,17 @@ class Riordinato:
         files : list
             The files found in the path.
         """
-        self.path = Path(path).absolute()
+        self.__path = Path(path).absolute()
         self.files = self.getFiles()    # get files from path
         self.prefixes: List[Prefix] = []
+        
+    @property
+    def path(self):
+        return Path(self.__path).absolute()
+
+    @path.setter
+    def path(self, new):
+        self.__path = Path(new).absolute()
 
     def moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
@@ -97,7 +107,7 @@ class Riordinato:
         """
 
         # Place the program within the address given by the path attribute
-        os.chdir(self.path)
+        os.chdir(self.__path)
 
         # Generates a list of files containing the prefix
         files = self.getFilesWP(prefix)
@@ -155,6 +165,7 @@ class Riordinato:
         # Move each file
         for prefix in prefixes:
             prefix.checkPrefix()    # Check if prefix instance is correct
+            self.checkDir()
             self.moveSpecificFiles(prefix.name, prefix.destination)
 
     def getFiles(self) -> list:
@@ -165,7 +176,7 @@ class Riordinato:
         list        
             All the files that are on the path, excluding the folders.
         """
-        files = self.path.iterdir()
+        files = self.__path.iterdir()
 
         # Get the files
         files = [file.name for file in files if file.is_file()]
@@ -213,7 +224,8 @@ class Riordinato:
 
     def checkDir(self):
         # check self.path
-        if not self.path.exists():
-            raise DirNotExistsError(self.path.name)
-        elif self.path.is_file():
-            raise DirIsFileError(self.path.name)
+        if not self.__path.exists():
+            raise FileNotFoundError()
+        elif self.__path.is_file():
+            raise NotADirectoryError()
+        
