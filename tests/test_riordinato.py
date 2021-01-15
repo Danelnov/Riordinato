@@ -1,3 +1,4 @@
+"""Tests of the Riordinato class methods"""
 from riordinato import Riordinato
 import pytest
 
@@ -21,27 +22,27 @@ def get_tmp_files(tmp_path):
     ("scince", ["scinceFiles.ebook"]),
     ("math", ["math_Problems.py"]),
 ])
-def test_getfilesWP(instance, prefix, expected):
+def test_getfilesWP(riordinato_instance, prefix, expected):
     """Test getfilesWP method"""
-    assert instance.getfilesWP(prefix) == expected
+    assert riordinato_instance.getfilesWP(prefix) == expected
 
 
-def test_getfiles(tmp_path, instance):
+def test_getfiles(tmp_path, riordinato_instance):
     """test getfiles method"""
-    assert get_tmp_files(tmp_path) == instance.files
+    assert get_tmp_files(tmp_path) == riordinato_instance.files
 
 
-def test_path_is_absolute(instance):
+def test_path_is_absolute(riordinato_instance):
     """tests if the path attribute is always an absolute path"""
-    assert instance.path.is_absolute()
+    assert riordinato_instance.path.is_absolute()
     # change the path
-    instance.path = "./python"
-    assert instance.path.is_absolute()
+    riordinato_instance.path = "./python"
+    assert riordinato_instance.path.is_absolute()
 
 
-def test_moveSpecificFiles(tmp_path, instance):
+def test_moveSpecificFiles(tmp_path, riordinato_instance):
     """test moveSpecificFiles method"""
-    instance._moveSpecificFiles('python', tmp_path.joinpath('python'))
+    riordinato_instance._moveSpecificFiles('python', tmp_path.joinpath('python'))
     expected = ['pythonCourse.txt', 'Python_tutorial.pdf']
     
     assert get_tmp_files(tmp_path.joinpath('python')) == expected
@@ -92,10 +93,12 @@ def test_moveSpecificFiles(tmp_path, instance):
          "math":[],
     })
 ])
-def test_movefiles(tmp_path, instance, specificp, ignorep, expected):
+def test_movefiles(tmp_path, riordinato_instance, specificp, ignorep, expected):
     """ test movefiles method"""
-    instance.movefiles(specific=specificp, ignore=ignorep)
+    riordinato_instance.movefiles(specific=specificp, ignore=ignorep)
 
     for dir in list(expected):
         files = get_tmp_files(tmp_path.joinpath(dir))
         assert files == expected[dir]
+
+# TODO: create a test for addprefix method

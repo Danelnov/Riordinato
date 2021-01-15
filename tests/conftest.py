@@ -1,4 +1,5 @@
 from riordinato import Riordinato
+from riordinato import Prefix
 import pytest
 
 
@@ -16,7 +17,7 @@ def create(tmp_path, files, dirs):
         
 
 @pytest.fixture
-def instance(tmp_path):
+def riordinato_instance(tmp_path):
     files = ["pythonCourse.txt", "Python_tutorial.pdf",
              "scinceFiles.ebook", "math_Problems.py",
              "index.html", "SpamFiles.lol",]
@@ -37,7 +38,7 @@ def instance(tmp_path):
 
 
 @pytest.fixture
-def empty_instance(tmp_path):
+def empty_riordinato_instance(tmp_path):
     """An instance of the class without files"""
     create(tmp_path, [], [])
     empty = Riordinato(tmp_path)
