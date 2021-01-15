@@ -5,36 +5,6 @@ class RiordinatoError(Exception):
     """Riordinato base Error"""
 
 
-class DirNotExistsError(RiordinatoError):
-    """Base dir error"""
-
-    def __init__(self, dir_name: str):
-        """
-        Parameters:
-        -----------
-        dir_name: str
-            Directory name.
-        """
-        self.dir_name = dir_name
-        super().__init__(self.error_message)
-
-    @property
-    def error_message(self):
-        return f"{self.dir_name} not exists"
-
-
-class DirIsFileError(DirNotExistsError):
-    """Directory is a file"""
-
-    def __init__(self, dir_name: str):
-        self.dir_name = dir_name
-        super().__init__(self.dir_name)
-
-    @property
-    def error_message(self):
-        return f"{self.dir_name} is a file"
-
-
 class InvalidPrefixError(RiordinatoError):
     """Base invalid prefix erro"""
 

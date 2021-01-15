@@ -6,8 +6,6 @@ from typing import Optional
 from typing import Union
 from typing import List
 
-from riordinato.exceptions import DirIsFileError
-from riordinato.exceptions import DirNotExistsError
 from riordinato.exceptions import TypePrefixError
 from riordinato.exceptions import EmptyPrefixError
 from riordinato.exceptions import InvalidPrefixError
@@ -32,9 +30,9 @@ class Prefix:
 
         # check path
         if not self.destination.exists():
-            raise DirNotExistsError(self.destination.name)
+            raise FileNotFoundError("This folder does not exist: '{}'".format(self.destination))
         elif self.destination.is_file():
-            raise DirIsFileError(self.destination.name)
+            raise NotADirectoryError("Not a directory: '{}'".format(self.destination))
 
         # check prefix name
         if not self.name:
@@ -199,9 +197,9 @@ class Riordinato:
         self.__prefixes.append(prefix)
 
     def checkdir(self):
-        # check self.path
+        # check self.__path
         if not self.__path.exists():
-            raise FileNotFoundError()
+            raise FileNotFoundError("This folder does not exist: '{}'".format(self.__path))
         elif self.__path.is_file():
-            raise NotADirectoryError()
+            raise NotADirectoryError("Not a directory: '{}'".format(self.__path))
         
