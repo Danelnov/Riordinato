@@ -49,28 +49,7 @@ class Prefix:
         return "Name: {}\tDestination: {}".format(self.name, self.destination)
 
 class Riordinato:
-    """
-    Create prefixes and use them to sort files in different folders.
-
-    Methods
-    -------
-    moveSpecificFiles(prefix, destination)
-        Move files with a specific prefix.
-    MoveFiles(specific=None, ignore=None)
-        Move all files that are in the path.
-    getFiles()
-        Get the files that are in the path attribute.
-    getFilesWP(prefix)
-        Get files with prefixes.
-
-    Examples
-    --------
-    >>> prefixes = [('python', '/home/user/documents/python'),
-    ...             ('math', '/home/user/documents/math')]
-    >>> path = "/home/user/desktop/python"
-    >>> a = Riordinato(prefixes, path)
-
-    """
+    """Create prefixes and use them to sort files in different folders"""
 
     def __init__(self, path: str):
         """
@@ -84,8 +63,8 @@ class Riordinato:
             The files found in the path.
         """
         self.__path = Path(path).absolute()
-        self.files = self.getFiles()    # get files from path
-        self.prefixes: List[Prefix] = []
+        self.files = self.getfiles()    # get files from path
+        self.__prefixes: List[Prefix] = []
         
     @property
     def path(self):
@@ -110,15 +89,15 @@ class Riordinato:
         os.chdir(self.__path)
 
         # Generates a list of files containing the prefix
-        files = self.getFilesWP(prefix)
+        files = self.getfilesWP(prefix)
 
         # Move files to destination
         for file in files:
             move(file, destination)        
 
-        self.files = self.getFiles()    # Update file list
+        self.files = self.getfiles()    # Update file list
 
-    def moveFiles(self, specific: Optional[Union[str, list]] = None,
+    def movefiles(self, specific: Optional[Union[str, list]] = None,
                   ignore: Optional[Union[str, list]] = None):
         """Move all files that are in the path
 
@@ -136,10 +115,6 @@ class Riordinato:
 
         >>> Riordinato.moveFiles()
 
-        Move only files that have math prefix.
-
-        >>> Riordinato.moveFiles(specific='math')
-
         Move all files except those with the math prefix.
 
         >>> Riordinato.moveFiles(ignore='math')
@@ -148,7 +123,7 @@ class Riordinato:
 
         >>> Riordinato.moveFiles(specific=['math', 'python', 'scince'])
         """
-        prefixes = self.prefixes
+        prefixes = self.__prefixes
 
         if specific:
             # Convert str to list
@@ -165,10 +140,10 @@ class Riordinato:
         # Move each file
         for prefix in prefixes:
             prefix.checkPrefix()    # Check if prefix instance is correct
-            self.checkDir()
+            self.checkdir()
             self.moveSpecificFiles(prefix.name, prefix.destination)
 
-    def getFiles(self) -> list:
+    def getfiles(self) -> list:
         """Get the files that are in the path attribute.
 
         Return
@@ -183,7 +158,7 @@ class Riordinato:
 
         return files
 
-    def getFilesWP(self, prefix: str) -> list:
+    def getfilesWP(self, prefix: str) -> list:
         """Get files with prefixes
 
         get the files that have the prefix through a regular expression
@@ -207,7 +182,8 @@ class Riordinato:
 
         return files
 
-    def addPrefix(self, name: str, destination: str):
+    # TODO: make methods for remove and edit prefixes
+    def addprefix(self, name: str, destination: str):
         """ add new prefixes
         
         Parameters
@@ -220,9 +196,9 @@ class Riordinato:
         prefix = Prefix(name, destination)
         prefix.checkPrefix()    # Check if prefix instance is correct
         # Add a Prefix instance to self.prefixes
-        self.prefixes.append(prefix)
+        self.__prefixes.append(prefix)
 
-    def checkDir(self):
+    def checkdir(self):
         # check self.path
         if not self.__path.exists():
             raise FileNotFoundError()

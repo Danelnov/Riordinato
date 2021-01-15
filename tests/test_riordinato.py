@@ -2,19 +2,6 @@ from riordinato import Riordinato
 import pytest
 
 
-def create(tmp_path, files, dirs):
-    """Create files and directories in a temporal path"""
-    # Create files
-    for file in files:
-        new_file = tmp_path / file
-        new_file.touch()
-
-    # Create directories
-    for dir in dirs:
-        new_dir = tmp_path / dir
-        new_dir.mkdir()
-
-
 def get_tmp_files(tmp_path):
     """Get the files from a folder in the temporal path
 
@@ -29,119 +16,86 @@ def get_tmp_files(tmp_path):
     return tmp_files
 
 
-@pytest.fixture
-def instance(tmp_path):
-    files = ["pythonTutorial.py", "mathExercise.txt", "pythonCourse.txt",
-             "pythonPro.docx", "Python_is_cool.py", "mathProblems.txt",
-             "ScinceU.docx", "ThisIsSpam.xd", "mathForPython.pdf",
-             "MoreSpam.toml", "scinceForComputing.epup", "asdkfñlk.idk", ]
-
-    dirs = ["python", "scince", "math"]
-
-    create(tmp_path, files, dirs)
-
-    prefixes = [('python', tmp_path / 'python'),
-                ('scince', tmp_path / 'scince'),
-                ('math', tmp_path / 'math')]
-    instance = Riordinato(tmp_path)
-    
-    for prefix in prefixes:
-        instance.addPrefix(prefix[0], prefix[1])
-    
-    return instance
-
-
-@pytest.fixture
-def empty_instance(tmp_path):
-    """An instance of the class without files"""
-    create(tmp_path, [], [])
-    empty = Riordinato(tmp_path)
-    return empty
-
-
-# test data for parametrize
-test_data = pytest.mark.parametrize(
-    "prefix, expected",
-    [
-        ("python",
-         ['Python_is_cool.py', 'pythonTutorial.py',
-          'pythonCourse.txt', 'pythonPro.docx', ]),
-
-        ("math",
-         ['mathForPython.pdf', 'mathProblems.txt',
-          'mathExercise.txt', ]),
-
-        ("scince",
-         ['scinceForComputing.epup', 'ScinceU.docx']),
-    ]
-)
-
-
-@test_data
-def test_getFilesWP(instance, prefix, expected):
-    assert instance.getFilesWP(prefix) == expected
-
-
-def test_empty_getFilesWP(empty_instance):
-    assert empty_instance.getFilesWP('prefix') == []
-
-
-def test_getFiles(tmp_path, instance):
-    expected_files = get_tmp_files(tmp_path)
-
-    assert instance.files == expected_files
-
-
-def test_empty_getFiles(empty_instance):
-    assert empty_instance.getFiles() == []
-
-
-# TODO: make this test general purpose for the moveFiles method
-@pytest.mark.parametrize("specific, ignore, expected_files", [
-    # Test move all files
-    (None, None,
-     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml']),
-    # Test move specific files
-    (["python", "math"], None,
-     ['scinceForComputing.epup', 'ScinceU.docx', 'asdkfñlk.idk',
-      'ThisIsSpam.xd', 'MoreSpam.toml']),
-    ("scince", None,
-     ['Python_is_cool.py', 'mathForPython.pdf', 'asdkfñlk.idk',
-      'mathProblems.txt', 'ThisIsSpam.xd', 'pythonTutorial.py',
-      'pythonCourse.txt', 'mathExercise.txt', 'MoreSpam.toml',
-      'pythonPro.docx']),
-    (["python", "math", "scince"], None,
-     ['asdkfñlk.idk', 'ThisIsSpam.xd', 'MoreSpam.toml']),
-    # Test ignore
-    (None, ["python", "math"],
-     ['Python_is_cool.py', 'mathForPython.pdf', 'asdkfñlk.idk',
-      'mathProblems.txt', 'ThisIsSpam.xd', 'pythonTutorial.py',
-      'pythonCourse.txt', 'mathExercise.txt', 'MoreSpam.toml',
-      'pythonPro.docx']
-     ),
-    (None, "python",
-     ['Python_is_cool.py', 'asdkfñlk.idk', 'ThisIsSpam.xd', 
-      'pythonTutorial.py', 'pythonCourse.txt', 'MoreSpam.toml', 
-      'pythonPro.docx']),
-    # Test ignore and specific
-    (["python", "math", "scince"], ["python", "math", "scince"],
-     ['scinceForComputing.epup', 'ScinceU.docx', 'Python_is_cool.py', 
-      'mathForPython.pdf', 'asdkfñlk.idk', 'mathProblems.txt', 
-      'ThisIsSpam.xd', 'pythonTutorial.py', 'pythonCourse.txt', 
-      'mathExercise.txt', 'MoreSpam.toml', 'pythonPro.docx']),
+@pytest.mark.parametrize("prefix, expected", [
+    ("python", ["pythonCourse.txt", "Python_tutorial.pdf"]),
+    ("scince", ["scinceFiles.ebook"]),
+    ("math", ["math_Problems.py"]),
 ])
-def test_moveFiles(tmp_path, instance, specific, ignore, expected_files):
-    instance.moveFiles(specific=specific, ignore=ignore)
-    # files = get_tmp_files(tmp_path)
-
-    assert instance.files == expected_files
+def test_getfilesWP(instance, prefix, expected):
+    """Test getfilesWP method"""
+    assert instance.getfilesWP(prefix) == expected
 
 
-@test_data
-def test_moveSpecificFiles(tmp_path, instance, prefix, expected):
-    instance.moveSpecificFiles(prefix, tmp_path / prefix)
-    files = get_tmp_files(tmp_path / prefix)
+def test_getfiles(tmp_path, instance):
+    """test getfiles method"""
+    assert get_tmp_files(tmp_path) == instance.files
 
-    assert files == expected
 
-# TODO: create tests for exceptions
+def test_path_is_absolute(instance):
+    """tests if the path attribute is always an absolute path"""
+    assert instance.path.is_absolute()
+    # change the path
+    instance.path = "./python"
+    assert instance.path.is_absolute()
+
+
+def test_moveSpecificFiles(tmp_path, instance):
+    """test moveSpecificFiles method"""
+    instance.moveSpecificFiles('python', tmp_path.joinpath('python'))
+    expected = ['pythonCourse.txt', 'Python_tutorial.pdf']
+    
+    assert get_tmp_files(tmp_path.joinpath('python')) == expected
+    
+
+@pytest.mark.parametrize("specificp, ignorep, expected", [
+    # Move all files that have a prefix
+    (None, None,
+     {
+         "python": ['pythonCourse.txt', 'Python_tutorial.pdf'],
+         "scince":['scinceFiles.ebook'],
+         "math":['math_Problems.py'],
+         ".":['SpamFiles.lol', 'index.html'],
+     }),
+    # Move files that only have python prefix
+    ("python", None,
+     {
+         "python": ['pythonCourse.txt', 'Python_tutorial.pdf'],
+         ".":['SpamFiles.lol', 'index.html',
+              'scinceFiles.ebook', 'math_Problems.py']
+     }),
+    # Move files that only have python and math prefix
+    (["python", "math"], None,
+     {
+         "python": ['pythonCourse.txt', 'Python_tutorial.pdf'],
+         "math":['math_Problems.py'],
+         ".":['SpamFiles.lol', 'index.html', 'scinceFiles.ebook', ]
+    }),
+    # Move all files except those with the scince prefix
+    (None, "scince",
+     {
+         "python": ['pythonCourse.txt', 'Python_tutorial.pdf'],
+         "math":['math_Problems.py'],
+         ".":['SpamFiles.lol', 'index.html', 'scinceFiles.ebook', ]
+     }),
+    # move all files except those with math and python prefixes
+    (None, ["scince", "math"],
+     {
+        "python": ['pythonCourse.txt', 'Python_tutorial.pdf'],
+        ".":['SpamFiles.lol', 'index.html',
+             'scinceFiles.ebook', 'math_Problems.py']
+    }),
+    # This should not move any files
+    (["python", "scince", "math"], ["python", "scince", "math"],
+     {
+         "python": [],
+         "scince":[],
+         "math":[],
+    })
+])
+def test_movefiles(tmp_path, instance, specificp, ignorep, expected):
+    """ test movefiles method"""
+    instance.movefiles(specific=specificp, ignore=ignorep)
+
+    for dir in list(expected):
+        files = get_tmp_files(tmp_path.joinpath(dir))
+        assert files == expected[dir]
