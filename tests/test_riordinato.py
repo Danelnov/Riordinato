@@ -41,7 +41,7 @@ def test_path_is_absolute(instance):
 
 def test_moveSpecificFiles(tmp_path, instance):
     """test moveSpecificFiles method"""
-    instance.moveSpecificFiles('python', tmp_path.joinpath('python'))
+    instance._moveSpecificFiles('python', tmp_path.joinpath('python'))
     expected = ['pythonCourse.txt', 'Python_tutorial.pdf']
     
     assert get_tmp_files(tmp_path.joinpath('python')) == expected

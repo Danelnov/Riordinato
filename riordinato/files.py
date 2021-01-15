@@ -74,7 +74,7 @@ class Riordinato:
     def path(self, new):
         self.__path = Path(new).absolute()
 
-    def moveSpecificFiles(self, prefix: str, destination: str):
+    def _moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
 
         Parameters
@@ -141,7 +141,7 @@ class Riordinato:
         for prefix in prefixes:
             prefix.checkPrefix()    # Check if prefix instance is correct
             self.checkdir()
-            self.moveSpecificFiles(prefix.name, prefix.destination)
+            self._moveSpecificFiles(prefix.name, prefix.destination)
 
     def getfiles(self) -> list:
         """Get the files that are in the path attribute.
