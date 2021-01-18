@@ -39,21 +39,3 @@ class EmptyPrefixError(InvalidPrefixError):
     @property
     def error_message(self):
         return "the prefix must contain some name"
-
-
-class TypePrefixError(InvalidPrefixError):
-    """The prefix is not a string"""
-    
-    def __inti__(self, prefix_name: Any):
-        """
-        Parameters:
-        -----------
-        prefix_name: str
-            Name of prefix.
-        """
-        self.prefix_name = prefix_name
-        super().__init__(self.prefix_name)
-    
-    @property
-    def error_message(self):
-        return f"{self.prefix_name} is a {type(self.prefix_name)} it should be a string"

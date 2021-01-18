@@ -97,8 +97,8 @@ def test_movefiles(tmp_path, riordinato_instance, specificp, ignorep, expected):
     """ test movefiles method"""
     riordinato_instance.movefiles(specific=specificp, ignore=ignorep)
 
-    for dir in list(expected):
+    for dir, expected_files in expected.items():
         files = get_tmp_files(tmp_path.joinpath(dir))
-        assert files == expected[dir]
+        assert files == expected_files
 
 # TODO: create a test for addprefix method

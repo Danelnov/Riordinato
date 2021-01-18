@@ -4,47 +4,38 @@ from shutil import move
 from pathlib import Path
 from typing import Optional
 from typing import Union
-from typing import List
 
-from riordinato.exceptions import TypePrefixError
 from riordinato.exceptions import EmptyPrefixError
 from riordinato.exceptions import InvalidPrefixError
 
 
-class Prefix:
-    def __init__(self, name: str, destination: str):
-        """
-        Parameters
-        ----------
-        name : str
-            Name of prefix.
-        destination : str
-            Prefix destination, must be a absolute path.
-        """
-        self.destination = Path(destination).absolute()
-        self.name = name
+class Prefix(dict):
+    INVALID_PREFIXES = ["."]
 
-    def checkPrefix(self):
-        """check that the attributes are correct"""
-        invalid_prefixes = ["."]
+    def __setitem__(self, prefix: str, destination: Union[str, Path]):
+        # get absolute path of name
+        destination = Path(destination).absolute()
 
-        # check path
-        if not self.destination.exists():
-            raise FileNotFoundError("This folder does not exist: '{}'".format(self.destination))
-        elif self.destination.is_file():
-            raise NotADirectoryError("Not a directory: '{}'".format(self.destination))
+        # check if the path is correct
+        if not destination.exists():
+            raise FileNotFoundError(
+                "This folder does not exist: '{}'".format(destination))
+        elif destination.is_file():
+            raise NotADirectoryError(
+                "Not a directory: '{}'".format(destination))
 
-        # check prefix name
-        if not self.name:
-            raise EmptyPrefixError(self.name)
+        # check prefix
+        if not prefix:
+            raise EmptyPrefixError(prefix)
         else:
-            if type(self.name) != str:
-                raise TypePrefixError(self.name)
-            elif self.name in invalid_prefixes:
-                raise InvalidPrefixError(self.name)
+            if type(prefix) != str:
+                raise TypeError(
+                    f"'{prefix}' is a '{type(prefix)}' it should be a string")
+            elif prefix in self.INVALID_PREFIXES:
+                raise InvalidPrefixError(prefix)
 
-    def __str__(self) -> str:
-        return "Name: {}\tDestination: {}".format(self.name, self.destination)
+        return dict.__setitem__(self, prefix, destination)
+
 
 class Riordinato:
     """Create prefixes and use them to sort files in different folders"""
@@ -53,8 +44,8 @@ class Riordinato:
         """
         Parameters
         ----------
-        prefixes : List[Prefix]
-            list containing prefixes name and destination place.
+        prefixes : Dict[Prefix, destination]
+            dict containing prefixes name and destination place.
         path : str
             The folder location where the files to be moved are located.
         files : list
@@ -62,8 +53,8 @@ class Riordinato:
         """
         self.__path = Path(path).absolute()
         self.files = self.getfiles()    # get files from path
-        self.__prefixes: List[Prefix] = []
-        
+        self.prefixes: dict = Prefix()
+
     @property
     def path(self):
         return Path(self.__path).absolute()
@@ -91,7 +82,7 @@ class Riordinato:
 
         # Move files to destination
         for file in files:
-            move(file, destination)        
+            move(file, destination)
 
         self.files = self.getfiles()    # Update file list
 
@@ -119,27 +110,29 @@ class Riordinato:
 
         Move only files that have prefixes that are in the list.
 
-        >>> Riordinato.moveFiles(specific=['math', 'python', 'scince'])
+        >>> Riordinato.moveFiles(specific=['math', 'python', 'scinc e'])
         """
-        prefixes = self.__prefixes
+        prefixes = self.prefixes.items()
 
         if specific:
             # Convert str to list
             specific = [specific] if type(specific) == str else specific
             # Create a list with only the prefixes that are specific
-            prefixes = filter(lambda prefix: prefix.name in specific, prefixes)
+            prefixes = filter(
+                lambda prefix: prefix[0] in specific, prefixes)
 
         if ignore:
             # Convert str to list
             ignore = [ignore] if type(ignore) == str else ignore
             # Create a list of prefixes avoiding the ignored ones
-            prefixes = filter(lambda prefix: prefix.name not in ignore, prefixes)
+            prefixes = filter(
+                lambda prefix: prefix[0] not in ignore, prefixes)
 
         # Move each file
-        for prefix in prefixes:
-            prefix.checkPrefix()    # Check if prefix instance is correct
-            self.checkdir()
-            self._moveSpecificFiles(prefix.name, prefix.destination)
+        for prefix, destination in prefixes:
+            self.checkdir(self.path)
+            self.checkdir(destination)
+            self._moveSpecificFiles(prefix, destination)
 
     def getfiles(self) -> list:
         """Get the files that are in the path attribute.
@@ -180,26 +173,11 @@ class Riordinato:
 
         return files
 
-    # TODO: make methods for remove and edit prefixes
-    def addprefix(self, name: str, destination: str):
-        """ add new prefixes
-        
-        Parameters
-        ----------
-        name: str
-            Name of prefix.
-        destination: str
-            Path where files containing prefix name will be moved.
-        """
-        prefix = Prefix(name, destination)
-        prefix.checkPrefix()    # Check if prefix instance is correct
-        # Add a Prefix instance to self.prefixes
-        self.__prefixes.append(prefix)
-
-    def checkdir(self):
-        # check self.__path
-        if not self.__path.exists():
-            raise FileNotFoundError("This folder does not exist: '{}'".format(self.__path))
-        elif self.__path.is_file():
-            raise NotADirectoryError("Not a directory: '{}'".format(self.__path))
-        
+    def checkdir(self, path):
+        # check path
+        if not path.exists():
+            raise FileNotFoundError(
+                "This folder does not exist: '{}'".format(path))
+        elif path.is_file():
+            raise NotADirectoryError(
+                "Not a directory: '{}'".format(path))

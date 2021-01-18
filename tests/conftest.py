@@ -31,9 +31,9 @@ def riordinato_instance(tmp_path):
                 ('math', tmp_path / 'math')]
     instance = Riordinato(tmp_path)
     
-    for prefix in prefixes:
-        instance.addprefix(prefix[0], prefix[1])
-    
+    for prefix, destination in prefixes:
+        instance.prefixes[prefix] = destination
+        
     return instance
 
 
@@ -43,3 +43,9 @@ def empty_riordinato_instance(tmp_path):
     create(tmp_path, [], [])
     empty = Riordinato(tmp_path)
     return empty
+
+
+@pytest.fixture
+def prefix(tmp_path):
+    create(tmp_path, [], ["directory"])
+    return Prefix()
