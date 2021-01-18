@@ -57,17 +57,17 @@ If you want to see the files that are in the path you can print the files attrib
 'work_list.txt', 'any_work.docx', 'work_for_later.docx', 'python_exercise.pdf']
 ```
 
-Now you have to create a prefix with the addPrefix method, the first parameter is the name and the second is the path where the files with the prefix name will move.
+Now you have to create a prefix. to do it is the same when you create a new item for a dictionary, the key is the prefix and the value is the destination
 
 ```py
-organize.addPrefix('python', './python')
-organize.addPrefix('work', './work')
+organize.prefixes['python'] = './python'
+organize.prefixes['work'] = './work' 
 ```
 
 To organize our files we use the moveFiles method
 
 ```py
-organize.moveFiles()
+organize.movefiles()
 ```
 
 And our directory would look like this.
@@ -91,7 +91,7 @@ And our directory would look like this.
 If we want to move files with a specific prefix, use the "specific" parameter of the method.
 
 ```py
-organize.moveFiles(specific='python')
+organize.movefiles(specific='python')
 ```
 
 ```
@@ -113,7 +113,7 @@ organize.moveFiles(specific='python')
 You can also ignore files that contain a certain prefix. In this case we will ignore the files that contain the python prefix.
 
 ```py
-organize.moveFile(ignore='python')
+organize.movefile(ignore='python')
 ```
 
 ```
