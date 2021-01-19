@@ -13,6 +13,17 @@ class Prefix(dict):
     INVALID_PREFIXES = ["."]
 
     def __setitem__(self, prefix: str, destination: Union[str, Path]):
+        """special method to return the value of destination turning 
+        it into an absolute path
+        
+        Parameters
+        ----------
+        prefix: str
+            The dictionary key that fulfills the function as a prefix
+        destination: str or a Path instance
+            The value of the key, receives a string and transforms it into an absolute path
+        """
+        
         # get absolute path of name
         destination = Path(destination).absolute()
 
@@ -61,7 +72,16 @@ class Riordinato:
 
     @path.setter
     def path(self, new):
-        self.__path = Path(new).absolute()
+        absolutepath = Path(new).absolute()
+        
+        if not absolutepath.exists():
+            raise FileNotFoundError(
+                "This folder does not exist: '{}'".format(absolutepath))
+        elif absolutepath.is_file():
+            raise NotADirectoryError(
+                "Not a directory: '{}'".format(absolutepath))
+            
+        self.__path = absolutepath
 
     def _moveSpecificFiles(self, prefix: str, destination: str):
         """Move files with a specific prefix.
@@ -130,8 +150,6 @@ class Riordinato:
 
         # Move each file
         for prefix, destination in prefixes:
-            self.checkdir(self.path)
-            self.checkdir(destination)
             self._moveSpecificFiles(prefix, destination)
 
     def getfiles(self) -> list:
@@ -172,12 +190,3 @@ class Riordinato:
             regex, afile, re.IGNORECASE), self.files))
 
         return files
-
-    def checkdir(self, path):
-        # check path
-        if not path.exists():
-            raise FileNotFoundError(
-                "This folder does not exist: '{}'".format(path))
-        elif path.is_file():
-            raise NotADirectoryError(
-                "Not a directory: '{}'".format(path))

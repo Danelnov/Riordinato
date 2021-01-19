@@ -32,11 +32,11 @@ def test_getfiles(tmp_path, riordinato_instance):
     assert get_tmp_files(tmp_path) == riordinato_instance.files
 
 
-def test_path_is_absolute(riordinato_instance):
+def test_path_is_absolute(tmp_path, riordinato_instance):
     """tests if the path attribute is always an absolute path"""
     assert riordinato_instance.path.is_absolute()
     # change the path
-    riordinato_instance.path = "./python"
+    riordinato_instance.path = tmp_path / "./python"
     assert riordinato_instance.path.is_absolute()
 
 

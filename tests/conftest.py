@@ -47,5 +47,10 @@ def empty_riordinato_instance(tmp_path):
 
 @pytest.fixture
 def prefix(tmp_path):
-    create(tmp_path, [], ["directory"])
+    create(tmp_path, ["file.txt"], ["directory"])
     return Prefix()
+
+@pytest.fixture
+def light_riordinato(tmp_path):
+    create(tmp_path, ["file.txt"], ["directory"])
+    return Riordinato(tmp_path / "directory")
