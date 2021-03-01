@@ -12,7 +12,7 @@ pip install riordinato
 
 ## Usage
 
-Riordinato is used to organize files by prefixes. For example, we want to move the files that have python in their name to the python folder and similar with the files that have work.
+Riordinato is used to organize files by prefixes. For example, we want to move files that have the prefixes python and work.
 
 ```
 /home/user/documents
@@ -41,6 +41,7 @@ Define a directory where we have the files we want to move.
 ```py
 path = '/home/user/documents'
 ```
+> **_NOTE:_** You can also put a windows path.
 
 Create the instance.
 
@@ -63,8 +64,9 @@ Now you have to create a prefix. to do it is the same when you create a new item
 organize.prefixes['python'] = './python'
 organize.prefixes['work'] = './work' 
 ```
+> **_NOTE:_** Riordinato by default transforms all paths into an absolute path. This allows your program to run from any path.
 
-To organize our files we use the moveFiles method
+To organize our files we use the movefiles method
 
 ```py
 organize.movefiles()
