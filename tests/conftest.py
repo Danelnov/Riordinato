@@ -1,3 +1,4 @@
+"""Config files for tests"""
 from riordinato import Riordinato
 from riordinato import Prefix
 import pytest

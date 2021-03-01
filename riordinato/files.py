@@ -93,18 +93,15 @@ class Riordinato:
         destination : str
             The directory where files containing the prefix will be moved.
         """
-
-        # Place the program within the address given by the path attribute
+        self.files = self.getfiles()    # Update file list
+        
         os.chdir(self.__path)
-
-        # Generates a list of files containing the prefix
         files = self.getfilesWP(prefix)
 
-        # Move files to destination
         for file in files:
             move(file, destination)
 
-        self.files = self.getfiles()    # Update file list
+        self.files = self.getfiles()   
 
     def movefiles(self, specific: Optional[Union[str, list]] = None,
                   ignore: Optional[Union[str, list]] = None):
@@ -122,15 +119,15 @@ class Riordinato:
 
         Move all file that have a prefix.
 
-        >>> Riordinato.moveFiles()
+        >>> Riordinato.movefiles()
 
         Move all files except those with the math prefix.
 
-        >>> Riordinato.moveFiles(ignore='math')
+        >>> Riordinato.movefiles(ignore='math')
 
         Move only files that have prefixes that are in the list.
 
-        >>> Riordinato.moveFiles(specific=['math', 'python', 'scinc e'])
+        >>> Riordinato.movefiles(specific=['math', 'python', 'scince'])
         """
         prefixes = self.prefixes.items()
 
@@ -148,7 +145,6 @@ class Riordinato:
             prefixes = filter(
                 lambda prefix: prefix[0] not in ignore, prefixes)
 
-        # Move each file
         for prefix, destination in prefixes:
             self._moveSpecificFiles(prefix, destination)
 
