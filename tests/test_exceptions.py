@@ -11,7 +11,7 @@ from riordinato.exceptions import InvalidPrefixError
 @pytest.mark.parametrize("name, destination, expected", [
     ("", "directory", EmptyPrefixError),
     (".", "directory", InvalidPrefixError),
-    (4, "directory", TypeError),
+    (4, "directory", KeyError),
     ("prefix", "file.txt", NotADirectoryError),
     ("prefix", "python", FileNotFoundError),
 ])

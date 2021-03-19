@@ -30,18 +30,18 @@ class Prefix(dict):
         # check if the path is correct
         if not destination.exists():
             raise FileNotFoundError(
-                "This folder does not exist: '{}'".format(destination))
+                f"This folder does not exist: '{destination}'")
         elif destination.is_file():
             raise NotADirectoryError(
-                "Not a directory: '{}'".format(destination))
+                f"Not a directory: '{destination}'")
 
         # check prefix
         if not prefix:
             raise EmptyPrefixError(prefix)
         else:
-            if type(prefix) != str:
-                raise TypeError(
-                    f"'{prefix}' is a '{type(prefix)}' it should be a string")
+            if not isinstance(prefix, str):
+                raise KeyError(
+                    f"{prefix} is an invalid prefix, it should be a string")
             elif prefix in self.INVALID_PREFIXES:
                 raise InvalidPrefixError(prefix)
 
@@ -130,17 +130,18 @@ class Riordinato:
         >>> Riordinato.movefiles(specific=['math', 'python', 'scince'])
         """
         prefixes = self.prefixes.items()
+        str_to_l = lambda x: [x] if isinstance(x, str) else x
 
         if specific:
             # Convert str to list
-            specific = [specific] if type(specific) == str else specific
+            specific = str_to_l(specific)
             # Create a list with only the prefixes that are specific
             prefixes = filter(
                 lambda prefix: prefix[0] in specific, prefixes)
 
         if ignore:
             # Convert str to list
-            ignore = [ignore] if type(ignore) == str else ignore
+            ignore = str_to_l(ignore)
             # Create a list of prefixes avoiding the ignored ones
             prefixes = filter(
                 lambda prefix: prefix[0] not in ignore, prefixes)
