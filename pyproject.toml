@@ -9,9 +9,13 @@ keywords = ["organize", "riordinato", "prefixes", "dir"]
 homepage = "https://github.com/DAN-pix/Riordinato"
 repository = "https://github.com/DAN-pix/Riordinato"
 
+[tool.poetry.scripts]
+riordinato = "riordinato.cli:main"
+
 [tool.poetry.dependencies]
 python = "^3.7"
 click = "^7.1.2"
+typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
