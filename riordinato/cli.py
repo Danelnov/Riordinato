@@ -1,43 +1,48 @@
 """Cli app for riordinato"""
 from pathlib import Path
 from riordinato import Riordinato
-from typing import Optional
 import json
 import typer
 
-
-def get_config_file():
-    app_dir = typer.get_app_dir('riordinato')
-    config = Path(app_dir) / "config.json"
-    if not config.exists():
-        config.touch()
-        
+import riordinato
 
 
 app = typer.Typer()
 
 
 @app.command()
-def move(prefix: str, destination: Path):
-    try:
-        instance = Riordinato(Path.cwd())
-        instance.prefixes[prefix] = destination
-        instance.movefiles(specific=prefix)
-        typer.secho(f"Done!", fg=typer.colors.GREEN, bold=True)
-    except:
-        typer.secho("Error", fg=typer.colors.RED, bold=True)
+def move(file: str = typer.Option('prefixes.json', '--file', '-f')):
+    riordinato = Riordinato(Path.cwd())
+    with open(file, 'r') as jfile:
+        data = json.load(jfile)
+        for prefix, destination in data.items():
+            riordinato.prefixes[prefix] = destination
+    
+    riordinato.movefiles()
 
 
 @app.command(name='add')
 def add_prefix(
     prefix: str,
-    destination: str,
+    destination: Path = typer.Argument(..., exists=True),
     file: str = typer.Option('prefixes.json', '--file', '-f')
 ):
     with open(file, 'r') as jfile:
         data = json.load(jfile)
     with open(file, 'w+') as jfile:
-        data[prefix] = destination
+        data[prefix] = str(destination.absolute())
+        jfile.write(json.dumps(data, ensure_ascii=False, indent=4))
+
+
+@app.command(name='remove')
+def remove_prefix(
+    prefix: str,
+    file: str = typer.Option('prefixes.json', '--file', '-f')
+):
+    with open(file, 'r') as jfile:
+        data = json.load(jfile)
+    with open(file, 'w+') as jfile:
+        del data[prefix]
         jfile.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 
