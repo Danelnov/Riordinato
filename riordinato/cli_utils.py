@@ -5,20 +5,29 @@ import typer
 import json
 
 
-def get_config_file() -> Path:
+def get_config_file(ignore=False) -> Path:
     """Get the application configuration file"""
     app_dir = typer.get_app_dir('riordinato')
     config = Path(app_dir) / "config.json"
-    if not config.exists():
-        config.touch()
-        create_file(str(config))
 
-    return config
+    if Path('prefixes.json').exists() and not ignore:
+        file = 'prefixes.json'
+        data = get_data(file)
+        if type(data) != dict:
+            create_file(file)
+    else:
+        file = str(config)
+        if not config.exists():
+            config.touch()
+            create_file(file)
+
+    return file
+
 
 def create_file(file):
     """Create the json file structure"""
     with open(file, 'w') as outfile:
-        json.dump({}, outfile, ensure_ascii=False, indent=4)
+        outfile.write(r"{}")
 
 
 def get_data(file) -> dict:
