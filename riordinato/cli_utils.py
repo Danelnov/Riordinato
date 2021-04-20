@@ -12,15 +12,18 @@ def get_config_file(ignore=False) -> Path:
 
     if Path('prefixes.json').exists() and not ignore:
         file = 'prefixes.json'
-        data = get_data(file)
-        if type(data) != dict:
-            create_file(file)
+        with open(file, 'r') as jfile:
+            if not jfile.readlines():
+                create_file(file)
     else:
         file = str(config)
         if not config.exists():
             config.touch()
-            create_file(file)
-
+        
+        with open(file, 'r') as jfile:
+            if not jfile.readlines():
+                create_file(file)
+    
     return file
 
 

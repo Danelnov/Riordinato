@@ -2,10 +2,9 @@
 from pathlib import Path
 from riordinato import Riordinato
 from .cli_utils import get_config_file, get_data
+from typing import List
 import json
 import typer
-
-import riordinato
 
 
 app = typer.Typer()
@@ -20,7 +19,7 @@ def move(
     data = get_data(file)
     for prefix, destination in data.items():
         riordinato.prefixes[prefix] = destination
-    
+
     riordinato.movefiles()
 
 
@@ -39,13 +38,17 @@ def add_prefix(
 
 @app.command(name='remove')
 def remove_prefix(
-    prefix: str,
+    prefixes: List[str],
     ignore: bool = False,
 ):
     file = get_config_file(ignore)
     data = get_data(file)
     with open(file, 'w+') as jfile:
-        del data[prefix]
+        if prefixes[0] == '.':
+            data = {}
+        else:
+            for prefix in prefixes:
+                del data[prefix]
         jfile.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 
