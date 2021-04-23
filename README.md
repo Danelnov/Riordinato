@@ -1,10 +1,15 @@
-# Riordinato
+<div align="center">
+    <h1>Riordinato</h1>
+    <h4>Riordinato is a python library for organizing files with prefixes.</h4>
+</div>
 
-Riordinato is a python library for organizing files with prefixes.
+<div align="center" width="60%" height="auto">
+    <img src="./resources/riordinato_cli.gif">
+</div>
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install riordinato.
+Use the package manager [pip](https://pypi.org/project/riordinato/) to install riordinato.
 
 ```bash
 pip install riordinato 
