@@ -10,7 +10,7 @@ from riordinato.exceptions import InvalidPrefixError
 
 
 class Prefix(dict):
-    INVALID_PREFIXES = ["."]
+    INVALID_PREFIXES = [".", "prefixes"]
 
     def __setitem__(self, prefix: str, destination: Union[str, Path]):
         """special method to return the value of destination turning 

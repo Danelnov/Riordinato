@@ -5,7 +5,7 @@ import typer
 import json
 
 
-def get_config_file(ignore=False) -> Path:
+def get_prefixes_file(ignore=False) -> Path:
     """Get the application configuration file"""
     app_dir = typer.get_app_dir('riordinato')
     config = Path(app_dir) / "config.json"

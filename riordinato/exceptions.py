@@ -20,7 +20,7 @@ class InvalidPrefixError(RiordinatoError):
 
     @property
     def error_message(self):
-        return f"{self.prefix_name} is a invalid prefix"
+        return f"{self.prefix_name} is an invalid prefix"
 
 
 class EmptyPrefixError(InvalidPrefixError):
