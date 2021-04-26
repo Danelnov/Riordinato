@@ -1,8 +1,8 @@
 """Cli app for riordinato"""
 from pathlib import Path
 from riordinato import Riordinato
-from .cli_utils import get_config_file, get_data
- 
+from .cli_utils import get_config_file, get_data, create_file
+
 import json
 import typer
 
@@ -14,8 +14,19 @@ app = typer.Typer()
 
 
 @app.command()
-def move(
-    ignore: bool = False, 
+def init():
+    """Create prefixes.json file in current directory"""
+    file = Path.cwd() / "prefixes.json"
+    if file.exists():
+        typer.echo("The file already exists")
+    else:
+        create_file(str(file))
+        typer.echo("The prefixes.json file was created")
+
+
+@app.command()
+def organize(
+    ignore: bool = False,
     specific: Optional[List[str]] = None,
     exclude: Optional[List[str]] = None,
 ):
