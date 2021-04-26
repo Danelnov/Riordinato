@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "riordinato"
-version = "1.7.0"
+version = "1.7.2"
 description = "organize your files with prefixes"
 authors = ["Dan- <misternutel@gmail.com>"]
 readme = "README.md"
@@ -13,7 +13,7 @@ repository = "https://github.com/DAN-pix/Riordinato"
 riordinato = "riordinato.cli:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 click = "^7.1.2"
 typer = "^0.3.2"
 
