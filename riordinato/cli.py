@@ -15,7 +15,9 @@ app = typer.Typer()
 
 @app.command()
 def init():
-    """Create prefixes.json file in current directory"""
+    """
+    Create prefixes.json file in current directory
+    """
     file = Path.cwd() / "prefixes.json"
     if file.exists():
         typer.echo("The file already exists")
@@ -26,11 +28,16 @@ def init():
 
 @app.command()
 def organize(
-    ignore: bool = False,
-    specific: Optional[List[str]] = None,
-    exclude: Optional[List[str]] = None,
+    ignore: bool = typer.Option(
+        False, help="Ignore the prefixes.json file inside the directory", show_default=False),
+    specific: Optional[List[str]] = typer.Option(
+        None, help="Only move files containing these prefixes"),
+    exclude: Optional[List[str]] = typer.Option(
+        None, help="Ignore all files with these prefixes"),
 ):
-    """Command to move files containing some prefix"""
+    """
+    Organize files that have prefixes
+    """
     file = get_config_file(ignore)
     riordinato = Riordinato(Path.cwd())
     data = get_data(file)
@@ -43,11 +50,16 @@ def organize(
 
 @app.command(name='add')
 def add_prefix(
-    prefix: str,
-    destination: Path = typer.Argument(..., exists=True),
-    ignore: bool = False,
+    prefix: str = typer.Argument(
+        ..., help="The prefix that the file names should have"),
+    destination: Path = typer.Argument(
+        ..., exists=True, help="The directory where the files with the prefix will be moved"),
+    ignore: bool = typer.Option(
+        False, help="Ignore the prefixes.json file inside the directory", show_default=False),
 ):
-    """Add a new prefix to the json file"""
+    """
+    Add a new prefix to the json file
+    """
     file = get_config_file(ignore)
     data = get_data(file)
     with open(file, 'w+') as jfile:
@@ -58,10 +70,14 @@ def add_prefix(
 
 @app.command(name='remove')
 def remove_prefix(
-    prefixes: List[str],
-    ignore: bool = False,
+    prefixes: List[str] = typer.Argument(
+        ..., help="The prefixes to be removed from the database"),
+    ignore: bool = typer.Option(
+        False, help="Ignore the prefixes.json file inside the directory", show_default=False),
 ):
-    """Remove prefixes"""
+    """
+    Remove prefixes
+    """
     file = get_config_file(ignore)
     data = get_data(file)
 
