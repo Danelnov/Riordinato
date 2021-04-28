@@ -11,9 +11,33 @@
 
 Use the package manager [pip](https://pypi.org/project/riordinato/) to install riordinato.
 
-```bash
-pip install riordinato 
+```console
+$ pip install riordinato 
 ```
+
+## Use the cli
+
+Riordinato includes a cli so you can organize all your files from the terminal.
+
+First you must go to the directory where you want riordinato to organize your files, then you must start the database with:
+
+```console
+$ riordinato init
+```
+
+Now you have to add a prefix and a directory path.
+
+```console
+$ riordinato add <prefix> <path>
+```
+
+Now to organize your files put:
+
+```console
+$ riordinato organize
+```
+
+If you want to know more about the cli read the documentation [here](./cli_docs.md).
 
 ## Usage
 
