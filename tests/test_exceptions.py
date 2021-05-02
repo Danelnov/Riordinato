@@ -17,7 +17,7 @@ from riordinato.exceptions import InvalidPrefixError
 ])
 def test_prefix_class_exceptions(tmp_path, prefix, name, destination, expected):
     with pytest.raises(expected):
-        prefix[name] = tmp_path /destination
+        prefix[name] = tmp_path / destination
 
 
 @pytest.mark.parametrize("path, expected", [

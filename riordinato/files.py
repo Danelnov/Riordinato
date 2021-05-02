@@ -7,7 +7,7 @@ from typing import Union
 
 from riordinato.exceptions import EmptyPrefixError
 from riordinato.exceptions import InvalidPrefixError
-
+from shutil import SameFileError
 
 class Prefix(dict):
     INVALID_PREFIXES = [".", "prefixes"]
@@ -55,12 +55,8 @@ class Riordinato:
         """
         Parameters
         ----------
-        prefixes : Dict[Prefix, destination]
-            dict containing prefixes name and destination place.
-        path : str
+        path: str
             The folder location where the files to be moved are located.
-        files : list
-            The files found in the path.
         """
         self.__path = Path(path).absolute()
         self.files = self.getfiles()    # get files from path
@@ -88,9 +84,9 @@ class Riordinato:
 
         Parameters
         ----------
-        prefix : str
+        prefix: str
             The prefix that the files must contain.
-        destination : str
+        destination: str
             The directory where files containing the prefix will be moved.
         """
         self.files = self.getfiles()    # Update file list
@@ -109,9 +105,9 @@ class Riordinato:
 
         Parameters
         ----------
-        specific : [str, list], optional
+        specific: [str, list], optional
             Move only files containing this prefix (default is None)
-        ignore : [str, list], optional
+        ignore: [str, list], optional
             Prefixes that are ignored (default is None)
 
         Examples
@@ -130,23 +126,24 @@ class Riordinato:
         >>> Riordinato.movefiles(specific=['math', 'python', 'scince'])
         """
         prefixes = self.prefixes.items()
-        str_to_l = lambda x: [x] if isinstance(x, str) else x
+        str_to_list = lambda x: [x] if isinstance(x, str) else x
 
         if specific:
             # Convert str to list
-            specific = str_to_l(specific)
+            specific = str_to_list(specific)
             # Create a list with only the prefixes that are specific
             prefixes = filter(
                 lambda prefix: prefix[0] in specific, prefixes)
 
         if ignore:
             # Convert str to list
-            ignore = str_to_l(ignore)
+            ignore = str_to_list(ignore)
             # Create a list of prefixes avoiding the ignored ones
             prefixes = filter(
                 lambda prefix: prefix[0] not in ignore, prefixes)
 
         for prefix, destination in prefixes:
+            self.check_files(destination)
             self._moveSpecificFiles(prefix, destination)
 
     def getfiles(self) -> list:
@@ -164,6 +161,25 @@ class Riordinato:
 
         return files
 
+    def check_files(self, directory: Path):
+        """check that there are no 2 files with the same name in two directories.
+        
+        Parameters
+        ----------
+        directoy: Path
+            Destination directory.
+
+        Raises
+        ------
+        SameFileError
+            If the source and destination are the same file
+        """
+        destination_files = [file.name for file in directory.iterdir() if file.is_file()]
+        for source_file in self.files:
+            if source_file in destination_files:
+                raise SameFileError(
+                    f"The file {source_file} already exists in the directory {directory}")
+    
     def getfilesWP(self, prefix: str) -> list:
         """Get files with prefixes
 
@@ -171,7 +187,7 @@ class Riordinato:
 
         Parameters
         ----------
-        prefix : str
+        prefix: str
             Prefix that will be used to filter the files that contain it.
 
         Return

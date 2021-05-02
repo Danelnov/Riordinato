@@ -39,3 +39,27 @@ def get_data(file) -> dict:
         data = json.load(jfile)
 
     return data
+
+def show_common_files(source: Path, destination: Path):
+    """check that there are no 2 files with the same name in two directories.
+
+    Parameters
+    ----------
+    source: Path
+        The directory where the repeated files are.
+    destination: Path
+        The second directory where it is to be compared with the first.
+    """
+    get_files = lambda path: [file.name for file in path.iterdir() if file.is_file()]
+    files1 = get_files(source)
+    files2 = get_files(destination)
+    # Get the repeated files
+    common_files = filter(lambda file: file in files2, files1)
+    
+    if common_files:
+        dest_style = typer.style(f"{destination}", underline=True)
+        typer.echo(f"These files already exists in the directory " + dest_style)
+        for file in common_files:
+            typer.secho(f"\t{file}", fg=typer.colors.RED)
+        typer.echo("Consider renaming or removing it.")
+   

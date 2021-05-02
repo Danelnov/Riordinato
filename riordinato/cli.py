@@ -1,16 +1,18 @@
 """Cli app for riordinato"""
-
-from riordinato.exceptions import InvalidPrefixError
-from .cli_utils import get_prefixes_file, get_data, create_file
+# Riordinato utils
+from .cli_utils import get_prefixes_file, get_data, create_file, show_common_files
 from riordinato import Riordinato
 from riordinato import Prefix
-
-import json
-import typer
+# Exceptions
+from riordinato.exceptions import InvalidPrefixError
+from shutil import SameFileError
 
 from pathlib import Path
 from typing import List
 from typing import Optional
+import json
+
+import typer
 
 
 app = typer.Typer(help="Organize your files by prefixes.")
@@ -56,23 +58,30 @@ def organize(
 
         # get the amount of files in current directory
         # to later calculate the number of files that were organized
-        def get_amount_files(): return len(
+        get_amount_files = lambda: len(
             [f for f in Path.cwd().iterdir() if f.is_file()])
         amount_files_before = get_amount_files()
 
-        # Add prefixes to a Riordinato object
         for prefix, destination in data.items():
             riordinato.prefixes[prefix] = destination
+            # Check that there are no files with the same name
+            riordinato.check_files(Path(destination))
         riordinato.movefiles(specific=specific, ignore=exclude)
-
-        # calculate files that were organized
+        
+        # Calculate files that were organized
         amount_files_after = get_amount_files()
-        amount_files = amount_files_before - amount_files_after
-        typer.echo(f"{amount_files} files were organized")
+        typer.echo(f"{amount_files_before - amount_files_after} files were organized")
+        
+    # If the folder does not exist show this message
     except FileNotFoundError:
-        typer.echo(f"The directory '{destination}' does not exist.", err=True)
+        typer.echo(f"The directory '{destination}' does not exist.")
         typer.echo("If you want to delete it put the following command:")
         typer.secho(f"riordinato remove {prefix}", bold=True)
+        raise typer.Exit(code=1)
+    # One file has the same name as another
+    except SameFileError:
+        show_common_files(Path.cwd(), Path(destination))
+        raise typer.Exit(code=1)
 
 
 @app.command(name='add')
@@ -98,9 +107,9 @@ def add_prefix(
     try:
         file = get_prefixes_file(ignore)
         data = get_data(file)
+        Prefix()[prefix] = destination  # check that the prefix is valid
 
         with open(file, 'w+') as jfile:
-            Prefix()[prefix] = destination  # check that the prefix is valid
             # Add a prefix with an absolute path
             data[prefix] = str(destination.absolute())
             # update the prefixes.json files
@@ -108,7 +117,10 @@ def add_prefix(
 
         typer.echo(f"{prefix}:{destination} was added.")
     except InvalidPrefixError:
-        typer.echo(f"{prefix} is an invalid prefix", err=True)
+        # if the prefix is "." or "prefixes" show this message
+        prefix_style = typer.style(f"{prefix}", underline=True)
+        typer.echo(prefix_style + " is an invalid prefix")
+        raise typer.Exit(code=1)
 
 
 @app.command(name='remove')
