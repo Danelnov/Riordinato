@@ -40,6 +40,7 @@ def get_data(file) -> dict:
 
     return data
 
+
 def show_common_files(source: Path, destination: Path):
     """check that there are no 2 files with the same name in two directories.
 
